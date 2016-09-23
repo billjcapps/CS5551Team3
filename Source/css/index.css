@@ -13,11 +13,7 @@
     background-color: rgba(0,0,0,0.3); /* Black w/ opacity */
 }
 
-/* Modal Content/Box */
-.modalContent {
-    background-color: #eeeeee;
-    margin: 10% auto; /* 15% from the top and centered */
-    padding: 20px;
-    border: 1px solid #777;
-    width: 90%; /* Could be more or less, depending on screen size */
-}
+.btn-label {position: relative;left: -12px;display: inline-block;padding: 6px 12px;background: rgba(0,0,0,0.15);border-radius: 3px 0 0 3px;}
+.btn-labeled {padding-top: 0;padding-bottom: 0;}
+.input-group { margin-bottom:10px; }
+.separator { border-right: 1px solid #dfdfe0; }
