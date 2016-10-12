@@ -20,20 +20,6 @@ function signOut() {
     });
 }
 
-function handleLoginModal() {
-
-
-    if (! googleUser.isSignedIn()) {
-        loginModal.style.display = "block";
-    }
-    else {
-        loginModal.style.display = "none";
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == loginModal) {
-            loginModal.style.display = "none";
-        }
-    }
-}
+angular.module("FlickBlenderApp", []).controller("FlickBlenderController", function($scope) {
+    $scope.message = "This is the home page.";
+});
