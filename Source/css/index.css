@@ -3,7 +3,7 @@
 .modal {
     display: block; /* showing when arrive at page */
     position: fixed; /* stay in place */
-    z-index: 2000; /* Sit on top */
+    z-index: 2000; /* Sit on top - AdminLTE uses some z-indexes above 1000 */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
