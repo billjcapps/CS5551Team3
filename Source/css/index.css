@@ -3,7 +3,7 @@
 .modal {
     display: block; /* showing when arrive at page */
     position: fixed; /* stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 2000; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
