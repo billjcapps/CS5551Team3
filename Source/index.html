@@ -47,10 +47,31 @@
 </div>
 </div>
 
-<div ng-controller="FlickBlenderController">
-    <p>{{message}}</p>
+<div class="container" ng-controller="FlickBlenderController">
+    <!-- top bar -->
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">{{message}}</div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+            <input type="button" id="signOutButton" onclick="signOut()" value="Sign Out">
+        </div>
+    </div>
+
+    <!-- section with 3 columns -->
+    <div class="row">
+        <!-- first column -->
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="border: thin solid black; height: 100%;">
+            <p>First col</p>
+        </div>
+        <!-- second column -->
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="border: 2px solid black; height: 100%;">
+            <p>Second col</p>
+        </div>
+        <!-- third column -->
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="border: 2px solid black; height: 100%;">
+            <p>Third col</p>
+        </div>
+    </div>
 </div>
-<input type="button" id="signOutButton" onclick="signOut()" value="Sign Out">
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
