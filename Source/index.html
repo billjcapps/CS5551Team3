@@ -19,24 +19,26 @@
 <body ng-app="FlickBlenderApp">
 
 <div class="container">
-<div class="row">
-<div id="loginModal" class="modal">
-    <div id="loginModalContent" class="modalContent">
-        <div class="col-xs-6 col-sm-6 col-md-4" style="margin: 10% 20%;">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Log in</h3>
-                </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-4 col-sm-4 col-md-4 separator social-login-box"> <br />
-                            <img src="img/Logo.png" class="img-responsive" style="width: 150px;">
-                            <br />
+    <div class="row">
+        <div id="loginModal" class="modal">
+            <div id="loginModalContent" class="modalContent">
+                <div class="col-xs-6 col-sm-6 col-md-4" style="margin: 10% 20%;">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Log in</h3>
                         </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6 login-box">
-                            <p>Sign in with Google...</p>
-                            <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-                            <p>Don't have an account? <a href=https://accounts.google.com/SignUp?hl=en>Sign up here</a></p>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-4 col-sm-4 col-md-4 separator social-login-box"> <br />
+                                    <img src="img/Logo.png" class="img-responsive" style="width: 150px;">
+                                    <br />
+                                </div>
+                                <div class="col-xs-6 col-sm-6 col-md-6 login-box">
+                                    <p>Sign in with Google...</p>
+                                    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+                                    <p>Don't have an account? <a href=https://accounts.google.com/SignUp?hl=en>Sign up here</a></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -44,31 +46,69 @@
         </div>
     </div>
 </div>
-</div>
-</div>
 
 <div class="container" ng-controller="FlickBlenderController" style="height: 90vh">
-    <!-- top bar -->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid"> 
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Flick Blender</a>
+            </div>
+            <div class="navbar-header navbar-right">
+                <p class="navbar-text">Welcome User !</p>
+                <button id="signOutButton" onclick="signOut()" value="Sign Out" class="btn btn-primary navbar-btn">Sign Out</button>
+            </div>
+         </div><!-- /.container-fluid -->
+    </nav>
     <div class="row">
-        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">{{message}}</div>
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-            <input type="button" id="signOutButton" onclick="signOut()" value="Sign Out">
+        <div class="col-sm-4 col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Shows</h3>
+                </div>
+                <div class="panel-body">
+                    Panel content
+                </div>
+            </div>
         </div>
-    </div>
+        <div class="col-sm-4 col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Episodes List</h3>
+                </div>
+                <div class="panel-body">
+                    Panel content
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4 col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Episode Details</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="thumbnail">
+                        <img src="img/Logo.png" alt="...">
+                        <div class="caption">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#summary" aria-controls="summary" role="tab" data-toggle="tab">Summary</a></li>
+                                <li role="presentation"><a href="#cast" aria-controls="cast" role="tab" data-toggle="tab">Cast</a></li>
+                            </ul>
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="summary">
+                                    <h4>Episode :</h4>
+                                    <h4>Release Date :</h4>
+                                    <h4>Description :</h4>
 
-    <!-- section with 3 columns -->
-    <div class="row" style="height: 100%">
-        <!-- first column -->
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="border: 2px solid black; height: 100%;">
-            <p>First col</p>
-        </div>
-        <!-- second column -->
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="border: 2px solid black; height: 100%;">
-            <p>Second col</p>
-        </div>
-        <!-- third column -->
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="border: 2px solid black; height: 100%;">
-            <p>Third col</p>
+                                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="cast">...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
