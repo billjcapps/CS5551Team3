@@ -67,7 +67,10 @@
                     <h3 class="panel-title">Shows</h3>
                 </div>
                 <div class="list-group">
-                    <a href="#" class="list-group-item" ng-repeat="show in shows">{{show}}</a>
+                    <a href="#"
+                       class="list-group-item"
+                       ng-repeat="show in shows"
+                       ng-click="listClick(show)">{{show}}</a>
                 </div>
             </div>
         </div>
@@ -77,7 +80,10 @@
                     <h3 class="panel-title">Episodes List</h3>
                 </div>
                 <div class="list-group">
-                    <a href="#" class="list-group-item" ng-repeat="episode in episodes">{{episode}}</a>
+                    <a href="#"
+                       class="list-group-item"
+                       ng-repeat="episode in episodes"
+                       ng-click="listClick(episode)">{{episode}}</a>
                 </div>
             </div>
         </div>

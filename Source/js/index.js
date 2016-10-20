@@ -25,4 +25,7 @@ angular.module("FlickBlenderApp", []).controller("FlickBlenderController", funct
 
     $scope.shows = ["Star Trek", "Doctor Who", "Firefly"];
     $scope.episodes = ["Season 1 episode 1", "Season 1 episode 2", "Season 1 episode 3", "Season 1 episode 4"];
+    $scope.listClick = function(name) {
+        console.log(name + " clicked");
+    };
 });
