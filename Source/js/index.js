@@ -22,4 +22,7 @@ function signOut() {
 
 angular.module("FlickBlenderApp", []).controller("FlickBlenderController", function($scope) {
     $scope.message = "This is the home page.";
+
+    $scope.shows = ["Star Trek", "Doctor Who", "Firefly"];
+    $scope.episodes = ["Season 1 episode 1", "Season 1 episode 2", "Season 1 episode 3", "Season 1 episode 4"];
 });
