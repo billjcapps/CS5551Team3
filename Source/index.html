@@ -29,14 +29,15 @@
                         </div>
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-xs-4 col-sm-4 col-md-4 separator social-login-box"> <br />
-                                    <img src="img/Logo.png" class="img-responsive" style="width: 150px;">
+                                <div class="col-xs-12 col-sm-5 col-md-5 separator social-login-box"> <br />
+                                    <img src="img/Logo.png" class="img-responsive" style="width: 120px;">
                                     <br />
                                 </div>
-                                <div class="col-xs-6 col-sm-6 col-md-6 login-box">
+                                <div class="col-xs-12 col-sm-7 col-md-7 login-box">
                                     <p>Sign in with Google...</p>
                                     <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-                                    <p>Don't have an account? <a href=https://accounts.google.com/SignUp?hl=en>Sign up here</a></p>
+                                    <p>Don't have an account?
+                                    <br /><a href=https://accounts.google.com/SignUp?hl=en>Sign up here</a></p>
                                 </div>
                             </div>
                         </div>
@@ -49,38 +50,45 @@
 
 <div class="container" ng-controller="FlickBlenderController" style="height: 90vh">
     <nav class="navbar navbar-default">
-        <div class="container-fluid">
+        <div class="container-fluid"> 
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">Flick Blender</a>
             </div>
             <div class="navbar-header navbar-right">
                 <p class="navbar-text">Welcome User !</p>
                 <button id="signOutButton" onclick="signOut()" value="Sign Out" class="btn btn-primary navbar-btn">Sign Out</button>
-                <div>
-                </div><!-- /.container-fluid -->
+            </div>
+         </div><!-- /.container-fluid -->
     </nav>
     <div class="row">
-        <div class="col-sm-6 col-md-4">
+        <div class="col-sm-4 col-md-4">
             <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Shows</h3>
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left" style="padding-top: 7.5px;">Shows</h3>
+                    <button href="#" class="btn btn-default btn-sm pull-right"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                 </div>
-                <div class="panel-body">
-                    Panel content
+                <div class="list-group">
+                    <a href="#"
+                       class="list-group-item"
+                       ng-repeat="show in shows"
+                       ng-click="listClick(show)">{{show}}</a>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-4">
+        <div class="col-sm-4 col-md-4">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">Episodes List</h3>
                 </div>
-                <div class="panel-body">
-                    Panel content
+                <div class="list-group">
+                    <a href="#"
+                       class="list-group-item"
+                       ng-repeat="episode in episodes"
+                       ng-click="listClick(episode)">{{episode}}</a>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-4">
+        <div class="col-sm-4 col-md-4">  <!-- TODO: why doesn't it work with col-md-4? -->
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">Episode Details</h3>
