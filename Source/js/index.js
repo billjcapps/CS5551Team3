@@ -4,23 +4,36 @@
 
 var googleUser;
 
-var loginModal = document.getElementById('loginModal');
+var loginModal = $('#loginModal');
+
+$( document ).ready(function() {
+    // disallow closing the login modal manually
+    // http://stackoverflow.com/questions/9894339/disallow-twitter-bootstrap-modal-window-from-closing
+    $('#loginModal').modal({
+        backdrop: 'static',
+        keyboard: false
+    });
+
+    // display the login modal
+    loginModal.modal({show:true});
+});
 
 function onSignIn(response) {
     console.log("onSignIn function");
     googleUser = response;
-    loginModal.style.display = "none";
+    loginModal.modal('hide');
 }
 
 function signOut() {
     var auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(function () {
         console.log('User signed out.');
-        loginModal.style.display = "block";
+        loginModal.modal({show:true});
     });
 }
 
 angular.module("FlickBlenderApp", []).controller("FlickBlenderController", function($scope) {
+    $scope.googleUser = googleUser;
     $scope.message = "This is the home page.";
 
     $scope.shows = ["Star Trek", "Doctor Who", "Firefly"];
