@@ -15,7 +15,7 @@ $( document ).ready(function() {
     });
 
     // display the login modal
-    loginModal.modal({show:true});
+    loginModal.modal('show');
 });
 
 function onSignIn(response) {
@@ -28,7 +28,7 @@ function signOut() {
     var auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(function () {
         console.log('User signed out.');
-        loginModal.modal({show:true});
+        loginModal.modal('show');
     });
 }
 
