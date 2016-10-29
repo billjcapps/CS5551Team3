@@ -18,6 +18,7 @@
 </head>
 <body ng-app="FlickBlenderApp">
 
+<!-- all of the modals here outside of the main container -->
 <!-- http://getbootstrap.com/javascript/#modals -->
 <div id="loginModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -48,6 +49,41 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div ng-controller="searchCtrl" class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <form role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder={{movie.Title}} ng-model="showName">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" ng-click="getShow()">Search</button>
+            </div>
+            <div ng-repeat="movie in movies" class= "modal-body">
+                <div class="media-left">
+                    <a href="#">
+                        <img width="64" height="64" class="media-object img-rounded" src="https://image.tmdb.org/t/p/w500{{movie.poster_path}}" alt="...">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <a href="#" class="media-heading">{{movie.original_name}}{{movie.original_title}}</a>
+                    <h5 class="media-heading">{{movie.first_air_date | limitTo:4}}{{movie.release_date | limitTo:4}}</h5>
+                    <h5 class="media-heading">{{movie.media_type}}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- main page container -->
 <div class="container" ng-controller="FlickBlenderController" style="height: 90vh">
     <nav class="navbar navbar-default">
         <div class="container-fluid"> 
@@ -63,8 +99,9 @@
     <div class="row">
         <div class="col-sm-4 col-md-4">
             <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Shows</h3>
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left">Shows</h3>
+                    <a href="#" class=" pull-right" data-toggle="modal" data-target="#searchModal"><span class="glyphicon glyphicon-plus" aria-hidden="true" style="color:white"></span></a>
                 </div>
                 <div class="list-group">
                     <a href="#"

@@ -32,7 +32,9 @@ function signOut() {
     });
 }
 
-angular.module("FlickBlenderApp", []).controller("FlickBlenderController", function($scope) {
+angular.module("FlickBlenderApp", [])
+
+.controller("FlickBlenderController", function($scope) {
     $scope.googleUser = googleUser;
     $scope.message = "This is the home page.";
 
@@ -40,5 +42,19 @@ angular.module("FlickBlenderApp", []).controller("FlickBlenderController", funct
     $scope.episodes = ["Season 1 episode 1", "Season 1 episode 2", "Season 1 episode 3", "Season 1 episode 4"];
     $scope.listClick = function(name) {
         console.log(name + " clicked");
+    };
+})
+
+.controller('searchCtrl', function($scope, $http) {
+    $scope.showName = "";
+    $scope.getShow = function() {
+
+        $http.get("https://api.themoviedb.org/3/search/multi?query=" + $scope.showName + "&api_key=2f4c29e5d9bbf6c3e34220d46d0595b0")
+
+            .then(function(response) {
+                $scope.movies = response.data.results
+            }, function(response) {
+                $scope.movies= "Something went wrong";
+            });
     };
 });
