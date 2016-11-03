@@ -54,7 +54,9 @@ angular.module("FlickBlenderApp", [])
             .then(function(response) {
                 $scope.movies = response.data.results
             }, function(response) {
-                $scope.movies= "Something went wrong";
+                console.log("error response from api");
+                console.log(response);
+                $scope.movies= [];
             });
     };
 });
