@@ -91,8 +91,11 @@
                 <a class="navbar-brand" href="#">Flick Blender</a>
             </div>
             <div class="navbar-header navbar-right">
-                <p class="navbar-text">Welcome User !</p>
-                <button id="signOutButton" onclick="signOut()" value="Sign Out" class="btn btn-primary navbar-btn">Sign Out</button>
+                <p class="navbar-text">Welcome {{googleProfile.getName()}}!</p>
+                <button id="signOutButton"
+                        ng-click="signOut()"
+                        value="Sign Out"
+                        class="btn btn-primary navbar-btn">Sign Out</button>
             </div>
          </div><!-- /.container-fluid -->
     </nav>

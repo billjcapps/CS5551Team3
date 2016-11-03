@@ -2,8 +2,6 @@
  * JavaScript for index.html
  */
 
-var googleUser;
-
 var loginModal = $('#loginModal');
 
 $( document ).ready(function() {
@@ -18,30 +16,32 @@ $( document ).ready(function() {
     loginModal.modal('show');
 });
 
-function onSignIn(response) {
-    console.log("onSignIn function");
-    googleUser = response;
-    loginModal.modal('hide');
-}
-
-function signOut() {
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-        console.log('User signed out.');
-        loginModal.modal('show');
-    });
-}
-
 angular.module("FlickBlenderApp", [])
 
 .controller("FlickBlenderController", function($scope) {
-    $scope.googleUser = googleUser;
-    $scope.message = "This is the home page.";
+    // google OAth stuff
+    function onSignIn(response) {
+        console.log("onSignIn function");
+        $scope.googleUser = response;
+        $scope.googleProfile = response.getBasicProfile();
+        loginModal.modal('hide');
+        $scope.$digest();
+    }
+    window.onSignIn = onSignIn;
+    $scope.signOut = function() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+            console.log('User signed out.');
+            $scope.$digest();
+            loginModal.modal('show');
+        });
+    };
 
     $scope.shows = ["Star Trek", "Doctor Who", "Firefly"];
     $scope.episodes = ["Season 1 episode 1", "Season 1 episode 2", "Season 1 episode 3", "Season 1 episode 4"];
     $scope.listClick = function(name) {
         console.log(name + " clicked");
+
     };
 })
 
