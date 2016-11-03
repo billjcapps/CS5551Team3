@@ -32,6 +32,7 @@ angular.module("FlickBlenderApp", [])
         var auth2 = gapi.auth2.getAuthInstance();
         auth2.signOut().then(function () {
             console.log('User signed out.');
+            $scope.googleProfile = null;  // remove the profile from the scope
             $scope.$digest();
             loginModal.modal('show');
         });
