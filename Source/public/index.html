@@ -115,11 +115,11 @@
                     </a>
                 </div>
                 <div class="list-group">
-                    <div ng-repeat="franchise in franchises">
+                    <div ng-repeat="franchise in franchises track by $index">
                         <div class="list-group-item franchiseName clearfix">
                             <a href="#"
                                class="pull-left btn btn-default franchiseBtn"
-                               ng-click="listClick(franchise)">{{franchise.name}}</a>
+                               ng-click="franchiseListClick($index)">{{franchise.name}}</a>
                             <a href="#"
                                class="pull-right addSeriesBtn"
                                data-toggle="modal"
@@ -130,11 +130,11 @@
                                 <!-- TODO: add tooltip to this -->
                             </a>
                         </div>
-                        <div class="list-group listOfSeriesesInFranchise">
+                        <div class="list-group listOfSeriesesInFranchise" ng-hide="thisFranchiseHidden[$index]">
                             <a href="#"
                                class="list-group-item"
-                               ng-repeat="series in franchise.serieses"
-                               ng-click="listClick(series)">{{series.name}}</a>
+                               ng-repeat="series in franchise.serieses track by $index"
+                               ng-click="seriesListClick($parent.$index, $index)">{{series.name}}</a>
                         </div>
                     </div>
                 </div>
@@ -148,8 +148,8 @@
                 <div class="list-group">
                     <a href="#"
                        class="list-group-item"
-                       ng-repeat="episode in episodes"
-                       ng-click="listClick(episode)">{{episode}}</a>
+                       ng-repeat="episode in currentEpisodeList track by $index"
+                       ng-click="episodeListClick($index)">{{episode.name}}</a>
                 </div>
             </div>
         </div>

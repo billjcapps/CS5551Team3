@@ -53,6 +53,7 @@ angular.module("FlickBlenderApp", [])
         });
     };
 
+
     $scope.episodes = ["Season 1 episode 1", "Season 1 episode 2", "Season 1 episode 3", "Season 1 episode 4"];
 
     // test data
@@ -93,10 +94,33 @@ angular.module("FlickBlenderApp", [])
     $scope.franchises[2].serieses.push(new Series("Serenity"));
     $scope.franchises[2].serieses[1].episodes.push(new Episode("Serenity", new Date(2005, 7, 3)));
 
-    $scope.listClick = function(showObject) {
-        console.log(showObject.name + " clicked");
+    $scope.lastFranchiseClicked = -1;  // second click toggles hiding of serieses
+    $scope.thisFranchiseHidden = $scope.franchises.map(function() {return true;});  // a true for each franchise
 
+    $scope.franchiseListClick = function(franchiseIndexClicked) {
+        console.log($scope.franchises[franchiseIndexClicked].name + " franchise clicked");
+        if (franchiseIndexClicked === $scope.lastFranchiseClicked) {
+            // toggle hidden
+            $scope.thisFranchiseHidden[franchiseIndexClicked] = !$scope.thisFranchiseHidden[franchiseIndexClicked]
+        }
+        else {  // first click on this franchise
+            $scope.lastFranchiseClicked = franchiseIndexClicked;
+        }
+
+        // TODO: show the blended episode list for this franchise
+        $scope.currentEpisodeList = [{name: "this will be the blended " +
+                                            $scope.franchises[franchiseIndexClicked].name +
+                                            " episode list"}];
     };
+
+    $scope.seriesListClick = function(franchiseIndexClicked, seriesIndexClicked) {
+        $scope.currentEpisodeList = $scope.franchises[franchiseIndexClicked].serieses[seriesIndexClicked].episodes;
+    };
+
+    $scope.episodeListClick = function(clickedObject) {
+        // TODO:
+        console.log(clickedObject);
+    }
 })
 
 .controller('searchCtrl', function($scope, $http) {
