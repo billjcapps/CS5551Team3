@@ -13,3 +13,17 @@
 }
 .input-group { margin-bottom:10px; }
 .separator { border-right: 1px solid #dfdfe0; }
+
+.franchiseName {
+    padding: 5px;
+}
+
+.franchiseBtn {
+    margin: 0;
+    border-radius: 0;
+    border: white;
+}
+
+.addSeriesBtn {
+    padding: 10px;
+}

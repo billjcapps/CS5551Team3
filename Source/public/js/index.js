@@ -2,6 +2,21 @@
  * JavaScript for index.html
  */
 
+function Franchise(_name) {
+    this.name = _name;
+    this.serieses = [];
+}
+
+function Series(_name) {
+    this.name = _name;
+    this.episodes = [];
+}
+
+function Episode(_name, _airDate) {
+    this.name = _name;
+    this.airDate = _airDate;
+}
+
 var loginModal = $('#loginModal');
 
 $( document ).ready(function() {
@@ -38,10 +53,48 @@ angular.module("FlickBlenderApp", [])
         });
     };
 
-    $scope.shows = ["Star Trek", "Doctor Who", "Firefly"];
     $scope.episodes = ["Season 1 episode 1", "Season 1 episode 2", "Season 1 episode 3", "Season 1 episode 4"];
-    $scope.listClick = function(name) {
-        console.log(name + " clicked");
+
+    // test data
+    $scope.franchises = [];
+    $scope.franchises.push(new Franchise("Star Trek"));
+    $scope.franchises[0].serieses.push(new Series("The Next Generation"));
+    $scope.franchises[0].serieses[0].episodes.push(new Episode("TNG Season 1 episode 1", new Date(99, 8, 3)));
+    $scope.franchises[0].serieses[0].episodes.push(new Episode("TNG Season 1 episode 2", new Date(99, 8, 10)));
+    $scope.franchises[0].serieses[0].episodes.push(new Episode("TNG Season 1 episode 3", new Date(99, 8, 17)));
+    $scope.franchises[0].serieses[0].episodes.push(new Episode("TNG Season 1 episode 4", new Date(99, 8, 24)));
+    $scope.franchises[0].serieses.push(new Series("Deep Space Nine"));
+    $scope.franchises[0].serieses[1].episodes.push(new Episode("DS9 Season 1 episode 1", new Date(2003, 8, 3)));
+    $scope.franchises[0].serieses[1].episodes.push(new Episode("DS9 Season 1 episode 2", new Date(2003, 8, 10)));
+    $scope.franchises[0].serieses[1].episodes.push(new Episode("DS9 Season 1 episode 3", new Date(2003, 8, 17)));
+    $scope.franchises[0].serieses[1].episodes.push(new Episode("DS9 Season 1 episode 4", new Date(2003, 8, 24)));
+    $scope.franchises[0].serieses.push(new Series("Voyager"));
+    $scope.franchises[0].serieses[2].episodes.push(new Episode("Voyager Season 1 episode 1", new Date(2005, 8, 3)));
+    $scope.franchises[0].serieses[2].episodes.push(new Episode("Voyager Season 1 episode 2", new Date(2005, 8, 10)));
+    $scope.franchises[0].serieses[2].episodes.push(new Episode("Voyager Season 1 episode 3", new Date(2005, 8, 17)));
+    $scope.franchises[0].serieses[2].episodes.push(new Episode("Voyager Season 1 episode 4", new Date(2005, 8, 24)));
+    $scope.franchises.push(new Franchise("Doctor Who"));
+    $scope.franchises[1].serieses.push(new Series("Classic"));
+    $scope.franchises[1].serieses[0].episodes.push(new Episode("Who Season 1 episode 1", new Date(99, 9, 3)));
+    $scope.franchises[1].serieses[0].episodes.push(new Episode("Who Season 1 episode 2", new Date(99, 9, 10)));
+    $scope.franchises[1].serieses[0].episodes.push(new Episode("Who Season 1 episode 3", new Date(99, 9, 17)));
+    $scope.franchises[1].serieses[0].episodes.push(new Episode("Who Season 1 episode 4", new Date(99, 9, 24)));
+    $scope.franchises[1].serieses.push(new Series("New"));
+    $scope.franchises[1].serieses[1].episodes.push(new Episode("New Who Season 1 episode 1", new Date(2003, 9, 3)));
+    $scope.franchises[1].serieses[1].episodes.push(new Episode("New Who Season 1 episode 2", new Date(2003, 9, 10)));
+    $scope.franchises[1].serieses[1].episodes.push(new Episode("New Who Season 1 episode 3", new Date(2003, 9, 17)));
+    $scope.franchises[1].serieses[1].episodes.push(new Episode("New Who Season 1 episode 4", new Date(2003, 9, 24)));
+    $scope.franchises.push(new Franchise("Firefly"));
+    $scope.franchises[2].serieses.push(new Series("TV"));
+    $scope.franchises[2].serieses[0].episodes.push(new Episode("FF Season 1 episode 1", new Date(2002, 9, 3)));
+    $scope.franchises[2].serieses[0].episodes.push(new Episode("FF Season 1 episode 2", new Date(2002, 9, 10)));
+    $scope.franchises[2].serieses[0].episodes.push(new Episode("FF Season 1 episode 3", new Date(2002, 9, 17)));
+    $scope.franchises[2].serieses[0].episodes.push(new Episode("FF Season 1 episode 4", new Date(2002, 9, 24)));
+    $scope.franchises[2].serieses.push(new Series("Serenity"));
+    $scope.franchises[2].serieses[1].episodes.push(new Episode("Serenity", new Date(2005, 7, 3)));
+
+    $scope.listClick = function(showObject) {
+        console.log(showObject.name + " clicked");
 
     };
 })

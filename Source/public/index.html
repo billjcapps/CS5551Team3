@@ -103,14 +103,40 @@
         <div class="col-sm-4 col-md-4">
             <div class="panel panel-primary">
                 <div class="panel-heading clearfix">
-                    <h3 class="panel-title pull-left">Shows</h3>
-                    <a href="#" class=" pull-right" data-toggle="modal" data-target="#searchModal"><span class="glyphicon glyphicon-plus" aria-hidden="true" style="color:white"></span></a>
+                    <h3 class="panel-title pull-left">Franchises</h3>
+                    <a href="#"
+                       class="pull-right"
+                       data-toggle="modal"
+                       data-target="#newFranchiseModal"> <!-- TODO: make this modal to add a new franchise -->
+                        <span class="glyphicon glyphicon-plus"
+                              aria-hidden="true"
+                              style="color:white"></span>
+                        <!-- TODO: add tooltip to this -->
+                    </a>
                 </div>
                 <div class="list-group">
-                    <a href="#"
-                       class="list-group-item"
-                       ng-repeat="show in shows"
-                       ng-click="listClick(show)">{{show}}</a>
+                    <div ng-repeat="franchise in franchises">
+                        <div class="list-group-item franchiseName clearfix">
+                            <a href="#"
+                               class="pull-left btn btn-default franchiseBtn"
+                               ng-click="listClick(franchise)">{{franchise.name}}</a>
+                            <a href="#"
+                               class="pull-right addSeriesBtn"
+                               data-toggle="modal"
+                               data-target="#searchModal">
+                                <span class="glyphicon glyphicon-plus"
+                                      aria-hidden="true"
+                                      style="color:@btn-default-color"></span>
+                                <!-- TODO: add tooltip to this -->
+                            </a>
+                        </div>
+                        <div class="list-group listOfSeriesesInFranchise">
+                            <a href="#"
+                               class="list-group-item"
+                               ng-repeat="series in franchise.serieses"
+                               ng-click="listClick(series)">{{series.name}}</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
