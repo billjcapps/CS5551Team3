@@ -6,9 +6,25 @@ function Franchise(_name) {
     this.name = _name;
     this.serieses = [];
 }
+Franchise.prototype.addSeries = function(name, id) {
+    // check for already present
+    if (! this.hasSeries(id)) {
+        this.serieses.push(new Series(name, id));
+    }
+};
+Franchise.prototype.hasSeries = function(id) {
+    console.log("checking if " + this.name + " Franchise has id " + id);
+    for (var i = 0; i < this.serieses.length; ++i) {
+        if (this.serieses[i].id == id) {
+            return true;
+        }
+    }
+    return false;
+};
 
-function Series(_name) {
+function Series(_name, _id) {
     this.name = _name;
+    this.id = _id;
     this.episodes = [];
 }
 
@@ -166,12 +182,17 @@ angular.module("FlickBlenderApp", [])
     $scope.searchResults = [];
     $scope.workingFranchise = workingFranchise;
 
-    $scope.getShow = function() {
+    $scope.searchButtonClick = function() {
+        console.log("clicked search button working with franchise " +
+                    userData.franchises[workingFranchise.index].name);
         $http.get("https://api.themoviedb.org/3/search/multi?query=" +
                   workingFranchise.searchText +
                   "&api_key=2f4c29e5d9bbf6c3e34220d46d0595b0")
         .then(function(response) {
-            $scope.searchResults = response.data.results
+            $scope.searchResults = response.data.results;
+            $scope.added = function(id) {
+                return userData.franchises[workingFranchise.index].hasSeries(id);  // function with id parameter
+            };
         }, function(response) {
             console.log("error response from api");
             console.log(response);
@@ -182,17 +203,19 @@ angular.module("FlickBlenderApp", [])
     $scope.searchResultClick = function(seriesResultIndex) {
         var seriesResult = $scope.searchResults[seriesResultIndex];
         console.log(seriesResult);
-        var id = seriesResult.id;  // TODO: put this in the Series ctor
+        var id = seriesResult.id;
         var name = seriesResult.original_name;
         if (name === undefined) {
             name = seriesResult.original_title;
         }
         console.log(name);
-        userData.franchises[workingFranchise.index].serieses.push(new Series(name));
+        userData.franchises[workingFranchise.index].addSeries(name, id);
 
         // TODO: add episodes for this series
         // TODO: remake blended episode list
-        // TODO: show in search results indication that this series was added
+
+        // show in search results indication that this series was added
+        $scope.$digest();
     };
 })
 

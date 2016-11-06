@@ -65,13 +65,13 @@
                         <input type="text"
                                class="form-control"
                                ng-model="workingFranchise.searchText"
-                               enter-press="getShow()">
+                               enter-press="searchButtonClick()">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" ng-click="getShow()">Search</button>
+                <button type="button" class="btn btn-primary" ng-click="searchButtonClick()">Search</button>
             </div>
             <div ng-repeat="show in searchResults track by $index" class= "modal-body">
                 <div class="media-left">
@@ -91,6 +91,11 @@
                     <h5 class="media-heading">{{show.first_air_date | limitTo:4}}
                                               {{show.release_date | limitTo:4}}</h5>
                     <h5 class="media-heading">{{show.media_type}}</h5>
+                </div>
+                <div class="media-right" ng-hide="! added(show.id)">
+                    <span class="glyphicon glyphicon-ok-circle"
+                          aria-hidden="true"
+                          style="color:green; font-size: 3em;"></span>
                 </div>
             </div>
         </div>
@@ -148,7 +153,7 @@
                     <a href="#"
                        class="pull-right"
                        data-toggle="modal"
-                       data-target="#newFranchiseModal"> <!-- TODO: make this modal to add a new franchise -->
+                       data-target="#newFranchiseModal">
                         <span class="glyphicon glyphicon-plus"
                               aria-hidden="true"
                               style="color:white"></span>
@@ -195,7 +200,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-4 col-md-4">  <!-- TODO: why doesn't it work with col-md-4? -->
+        <div class="col-sm-4 col-md-4">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">Episode Details</h3>
