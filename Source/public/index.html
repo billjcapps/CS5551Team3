@@ -54,7 +54,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                <h4 class="modal-title" id="searchLabel">Modal title</h4>
             </div>
             <div class="modal-body">
                 <form role="search">
@@ -78,6 +78,28 @@
                     <h5 class="media-heading">{{movie.first_air_date | limitTo:4}}{{movie.release_date | limitTo:4}}</h5>
                     <h5 class="media-heading">{{movie.media_type}}</h5>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-controller="newFranchiseCtrl" class="modal fade" id="newFranchiseModal" tabindex="-1" role="dialog" aria-labelledby="new franchise">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="newFranchiseLabel">New Franchise</h4>
+            </div>
+            <div class="modal-body">
+                <form role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Franchise Name" ng-model="franchiseName">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" ng-click="addFranchiseClick()">Add</button>
             </div>
         </div>
     </div>
@@ -115,7 +137,7 @@
                     </a>
                 </div>
                 <div class="list-group">
-                    <div ng-repeat="franchise in franchises track by $index">
+                    <div ng-repeat="franchise in userData.franchises track by $index">
                         <div class="list-group-item franchiseName clearfix">
                             <a href="#"
                                class="pull-left btn btn-default franchiseBtn"
