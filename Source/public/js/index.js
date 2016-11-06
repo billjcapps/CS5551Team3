@@ -122,10 +122,8 @@ angular.module("FlickBlenderApp", [])
                     angular.forEach(seasonInfo.data.episodes, function(episode) {
                         // console.log("found this episode in seasonInfo:");
                         // console.log(episode);
-                        var dateInfo = episode.air_date.split('-');
-                        var airDate = new Date(dateInfo[0], dateInfo[1], dateInfo[2]);
                         // TODO: get more info about episode
-                        seasonAPICalls.addToEpisodeList(new Episode(episode.name, airDate));
+                        seasonAPICalls.addToEpisodeList(new Episode(episode.name, convertDate(episode.air_date)));
                     });
                     // console.log("promise should now be resolved for: " + url);
                 })
@@ -275,10 +273,11 @@ angular.module("FlickBlenderApp", [])
     };
 
     $scope.searchResultClick = function(seriesResultIndex) {
-        // TODO: show user an indication that this series is in the process of being added (it'll take a few seconds)
+        // TODO: show user an indication that this series is in the process of being added (it might take a few seconds)
 
         var seriesResult = $scope.searchResults[seriesResultIndex];
         console.log(seriesResult);
+
         var id = seriesResult.id;
         var name = seriesResult.original_name;
         if (name === undefined) {
@@ -286,6 +285,19 @@ angular.module("FlickBlenderApp", [])
         }
         console.log(name);
         userData.franchises[workingFranchise.index].addSeries(name, id);
+
+        if (seriesResult.media_type == "movie") {
+            userData.franchises[workingFranchise.index].getSeriesById(id).episodes = [
+                new Episode(name, convertDate(seriesResult.release_date))
+            ];
+
+            // TODO: remake blended episode list
+
+            // show in search results indication that this series was added
+            // $scope.$digest();
+
+            return;
+        }
 
         // add episodes (or update episode list) for this series
 
@@ -314,7 +326,7 @@ angular.module("FlickBlenderApp", [])
                 // TODO: remake blended episode list
 
                 // show in search results indication that this series was added
-                $scope.$digest();
+                // $scope.$digest();
             });
         });
     };
@@ -328,3 +340,13 @@ angular.module("FlickBlenderApp", [])
         $("#newFranchiseModal").modal('hide');
     }
 });
+
+/**
+ * convert date from moviedb format to javascript Date
+ * @param dateStringFromAPI
+ * @returns {Date}
+ */
+var convertDate = function(dateStringFromAPI) {
+    var dateInfo = dateStringFromAPI.split('-');
+    return new Date(dateInfo[0], parseInt(dateInfo[1]) - 1, dateInfo[2]);
+};
