@@ -33,6 +33,15 @@ $( document ).ready(function() {
 
 angular.module("FlickBlenderApp", [])
 
+// for sharing information between controllers about which franchise we are working with
+.factory("workingFranchise", function() {
+    var data = {
+        index: -1,
+        searchText: ""
+    };
+    return data;
+})
+
 .factory("userData", function() {
     var data = {franchises: []};
 
@@ -80,7 +89,7 @@ angular.module("FlickBlenderApp", [])
     return data;
 })
 
-.controller("FlickBlenderController", function($scope, userData) {
+.controller("FlickBlenderController", function($scope, userData, workingFranchise) {
     // google OAth stuff
     function onSignIn(response) {
         console.log("onSignIn function");
@@ -122,6 +131,12 @@ angular.module("FlickBlenderApp", [])
                                             " episode list"}];
     };
 
+    $scope.addSeriesClick = function(franchiseIndex) {
+        workingFranchise.index = franchiseIndex;
+        workingFranchise.searchText = userData.franchises[franchiseIndex].name;
+        console.log(workingFranchise.searchText);
+    };
+
     $scope.seriesListClick = function(franchiseIndexClicked, seriesIndexClicked) {
         $scope.currentEpisodeList = userData.franchises[franchiseIndexClicked].serieses[seriesIndexClicked].episodes;
     };
@@ -132,20 +147,37 @@ angular.module("FlickBlenderApp", [])
     }
 })
 
-.controller('searchCtrl', function($scope, $http, userData) {
-    $scope.showName = "";
+.controller('searchCtrl', function($scope, $http, userData, workingFranchise) {
+    $scope.searchResults = [];
+    $scope.workingFranchise = workingFranchise;
 
     $scope.getShow = function() {
         $http.get("https://api.themoviedb.org/3/search/multi?query=" +
-                  $scope.showName +
+                  workingFranchise.searchText +
                   "&api_key=2f4c29e5d9bbf6c3e34220d46d0595b0")
         .then(function(response) {
-            $scope.movies = response.data.results
+            $scope.searchResults = response.data.results
         }, function(response) {
             console.log("error response from api");
             console.log(response);
-            $scope.movies= [];
+            $scope.searchResults= [];
         });
+    };
+
+    $scope.searchResultClick = function(seriesResultIndex) {
+        var seriesResult = $scope.searchResults[seriesResultIndex];
+        console.log(seriesResult);
+        var id = seriesResult.id;  // TODO: put this in the Series ctor
+        var name = seriesResult.original_name;
+        if (name === undefined) {
+            name = seriesResult.original_title;
+        }
+        console.log(name);
+        userData.franchises[workingFranchise.index].serieses.push(new Series(name));
+
+        // TODO: add episodes for this series
+        // TODO: remake blended episode list
+        // TODO: show in search results indication that this series was added
     };
 })
 

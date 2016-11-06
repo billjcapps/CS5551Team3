@@ -20,6 +20,8 @@
 
 <!-- all of the modals here outside of the main container -->
 <!-- http://getbootstrap.com/javascript/#modals -->
+
+<!-- login modal -->
 <div id="loginModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -49,17 +51,20 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- modal for adding a series to a franchise -->
 <div ng-controller="searchCtrl" class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="searchLabel">Modal title</h4>
+                <h4 class="modal-title" id="searchLabel">Search for a series to add</h4>
             </div>
             <div class="modal-body">
                 <form role="search">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder={{movie.Title}} ng-model="showName">
+                        <input type="text"
+                               class="form-control"
+                               ng-model="workingFranchise.searchText">
                     </div>
                 </form>
             </div>
@@ -67,22 +72,31 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" ng-click="getShow()">Search</button>
             </div>
-            <div ng-repeat="movie in movies" class= "modal-body">
+            <div ng-repeat="show in searchResults track by $index" class= "modal-body">
                 <div class="media-left">
-                    <a href="#">
-                        <img width="64" height="64" class="media-object img-rounded" src="https://image.tmdb.org/t/p/w500{{movie.poster_path}}" alt="...">
+                    <a href="#" ng-click="searchResultClick($index)">
+                        <img width="64"
+                             height="64"
+                             class="media-object img-rounded"
+                             src="https://image.tmdb.org/t/p/w500{{show.poster_path}}"
+                             alt="...">
                     </a>
                 </div>
                 <div class="media-body">
-                    <a href="#" class="media-heading">{{movie.original_name}}{{movie.original_title}}</a>
-                    <h5 class="media-heading">{{movie.first_air_date | limitTo:4}}{{movie.release_date | limitTo:4}}</h5>
-                    <h5 class="media-heading">{{movie.media_type}}</h5>
+                    <a href="#"
+                       ng-click="searchResultClick($index)"
+                       class="media-heading">{{show.original_name}}
+                                             {{show.original_title}}</a>
+                    <h5 class="media-heading">{{show.first_air_date | limitTo:4}}
+                                              {{show.release_date | limitTo:4}}</h5>
+                    <h5 class="media-heading">{{show.media_type}}</h5>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- modal for adding a new franchise -->
 <div ng-controller="newFranchiseCtrl" class="modal fade" id="newFranchiseModal" tabindex="-1" role="dialog" aria-labelledby="new franchise">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -143,6 +157,7 @@
                                class="pull-left btn btn-default franchiseBtn"
                                ng-click="franchiseListClick($index)">{{franchise.name}}</a>
                             <a href="#"
+                               ng-click="addSeriesClick($index)"
                                class="pull-right addSeriesBtn"
                                data-toggle="modal"
                                data-target="#searchModal">
