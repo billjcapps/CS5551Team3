@@ -64,7 +64,8 @@
                     <div class="form-group">
                         <input type="text"
                                class="form-control"
-                               ng-model="workingFranchise.searchText">
+                               ng-model="workingFranchise.searchText"
+                               enter-press="getShow()">
                     </div>
                 </form>
             </div>
@@ -107,7 +108,11 @@
             <div class="modal-body">
                 <form role="search">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Franchise Name" ng-model="franchiseName">
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Franchise Name"
+                               ng-model="franchiseName"
+                               enter-press="addFranchiseClick()">
                     </div>
                 </form>
             </div>

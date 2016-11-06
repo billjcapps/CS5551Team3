@@ -33,6 +33,21 @@ $( document ).ready(function() {
 
 angular.module("FlickBlenderApp", [])
 
+// enter-press attribute on html element to execute a function when enter is pressed
+.directive("enterPress", function() {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if (event.which === 13) {
+                scope.$apply(function () {
+                    scope.$eval(attrs.enterPress);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
+})
+
 // for sharing information between controllers about which franchise we are working with
 .factory("workingFranchise", function() {
     var data = {
