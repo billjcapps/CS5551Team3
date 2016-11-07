@@ -204,7 +204,7 @@
                     <a href="#"
                        class="list-group-item"
                        ng-repeat="episode in currentEpisodeList track by $index"
-                       ng-click="episodeListClick($index)">{{episode.name}}</a>
+                       ng-click="episodeListClick($index)">{{episode.getSeasonEpisodeString() + episode.name}}</a>
                 </div>
             </div>
         </div>
@@ -215,23 +215,25 @@
                 </div>
                 <div class="panel-body">
                     <div class="thumbnail">
-                        <img src="img/Logo.png" alt="...">
+                        <img src="img/Logo.png" alt="..."> <!-- TODO: img src episode.imgPath -->
                         <div class="caption">
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="active"><a href="#summary" aria-controls="summary" role="tab" data-toggle="tab">Summary</a></li>
-                                <li role="presentation"><a href="#cast" aria-controls="cast" role="tab" data-toggle="tab">Cast</a></li>
+                                <li role="presentation" class="active"><a href="#info" aria-controls="info" role="tab" data-toggle="tab">Info</a></li>
+                                <li role="presentation"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a></li>
                             </ul>
                             <!-- Tab panes -->
                             <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="summary">
-                                    <h4>Episode :</h4>
-                                    <h4>Release Date :</h4>
-                                    <h4>Description :</h4>
-
-                                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                                <div role="tabpanel" class="tab-pane active" id="info">
+                                    <h4>Title: {{focusEpisode.name}}</h4>
+                                    <h4 ng-hide="focusEpisode.seasonNumber == 0">
+                                        Season: {{focusEpisode.seasonNumber}} Episode: {{focusEpisode.episodeNumber}}
+                                    </h4>
+                                    <h4>Release Date: {{focusEpisode.getDateString()}}</h4>
                                 </div>
-                                <div role="tabpanel" class="tab-pane" id="cast">...</div>
+                                <div role="tabpanel" class="tab-pane" id="overview">
+                                    <p style="white-space: pre-line;">{{focusEpisode.overview}}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -247,7 +249,6 @@
 <script src="js/angular.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="js/bootstrap.min.js"></script>
-<script src="js/rbtree.js"></script>
 <script src="js/index.js"></script>
 
 <script src="js/unitTests.js"></script> <!-- comment this out for faster page loading -->

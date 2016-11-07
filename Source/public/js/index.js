@@ -76,11 +76,49 @@ Series.prototype.sortAndSetEpisodes = function (unsortedEpisodeList) {
     });
 };
 
-function Episode(_name, _airDate) {
+/**
+ *  if movie, pass 0 as season number
+ * @param _name
+ * @param _airDate
+ * @param _seasonNumber if movie, pass 0
+ * @param _episodeNumber
+ * @param _overview
+ * @param _imgPath
+ * @constructor
+ */
+function Episode(_name, _airDate, _seasonNumber, _episodeNumber, _overview, _imgPath) {
     // console.log("constructing episode " + _name + " with date " + _airDate);
     this.name = _name;
     this.airDate = _airDate;
+    this.seasonNumber = _seasonNumber;
+    this.episodeNumber = _episodeNumber;
+    this.overview = _overview;
+    this.imgPath = _imgPath;
 }
+Episode.MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+Episode.prototype.getSeasonEpisodeString = function() {
+    if (this.seasonNumber == 0) {  // movie
+        return "";
+    }
+
+    // not a movie
+    var toReturn = "S";
+    if (this.seasonNumber < 10) {
+        toReturn += "0";
+    }
+    toReturn += this.seasonNumber + "E";
+    if (this.episodeNumber < 10) {
+        toReturn += "0";
+    }
+    toReturn += this.episodeNumber + " ";
+
+    return toReturn;
+};
+Episode.prototype.getDateString = function() {
+    return this.airDate.getUTCFullYear() + " " +
+           Episode.MONTHS[this.airDate.getUTCMonth()] + " " +
+           this.airDate.getUTCDate();
+};
 
 var loginModal = $('#loginModal');
 
@@ -171,8 +209,12 @@ angular.module("FlickBlenderApp", [])
                     angular.forEach(seasonInfo.data.episodes, function(episode) {
                         // console.log("found this episode in seasonInfo:");
                         // console.log(episode);
-                        // TODO: get more info about episode
-                        seasonAPICalls.addToEpisodeList(new Episode(episode.name, convertDate(episode.air_date)));
+                        seasonAPICalls.addToEpisodeList(new Episode(episode.name,
+                                                                    convertDate(episode.air_date),
+                                                                    episode.season_number,
+                                                                    episode.episode_number,
+                                                                    episode.overview,
+                                                                    episode.still_path));
                     });
                     // console.log("promise should now be resolved for: " + url);
                 })
@@ -291,9 +333,8 @@ angular.module("FlickBlenderApp", [])
         $scope.lastFranchiseClicked = -1;
     };
 
-    $scope.episodeListClick = function(clickedObject) {
-        // TODO: episode click
-        console.log(clickedObject);
+    $scope.episodeListClick = function(clickedIndex) {
+        $scope.focusEpisode = $scope.currentEpisodeList[clickedIndex];
     }
 })
 
@@ -334,8 +375,15 @@ angular.module("FlickBlenderApp", [])
         userData.franchises[workingFranchise.index].addSeries(name, id);
 
         if (seriesResult.media_type == "movie") {
+            // console.log(seriesResult);
+            // to signal that it is a movie, seasonNumber is set to 0
             userData.franchises[workingFranchise.index].getSeriesById(id).episodes = [
-                new Episode(name, convertDate(seriesResult.release_date))
+                new Episode(name,
+                            convertDate(seriesResult.release_date),
+                            0,
+                            0,
+                            seriesResult.overview,
+                            seriesResult.backdrop_path)
             ];
 
             userData.franchises[workingFranchise.index].remakeBlendedEpisodeList();
