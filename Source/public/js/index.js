@@ -35,10 +35,65 @@ Franchise.prototype.getSeriesById = function(id) {
     return null;
 };
 Franchise.prototype.remakeBlendedEpisodeList = function () {
-    // TODO: remake blended episode list
-    this.blended = [{name: "this will be the blended " +
-                           this.name +
-                           " episode list"}];
+    // note: this relies on the series episode lists being sorted
+
+    // like the merge part of merge sort
+    this.blended = [];
+    var seriesesNotDoneCount = 0;
+    var FLAG_FOR_NO_NONEMPTY_LIST_FOUND = this.serieses.length + 1;
+    var firstNonEmptyEpisodeList = FLAG_FOR_NO_NONEMPTY_LIST_FOUND;
+    var earliestEpisodeIndex;  // this variable will hold which series it comes from
+    var i;  // iterating index
+
+    var cursors = [];  // cursors for episodes
+    for (i = 0; i < this.serieses.length; ++i) {
+        if (this.serieses[i].episodes.length > 0) {
+            if (firstNonEmptyEpisodeList == FLAG_FOR_NO_NONEMPTY_LIST_FOUND) {
+                firstNonEmptyEpisodeList = i;
+            }
+            ++seriesesNotDoneCount;
+            cursors.push(0);
+        }
+        else {
+            cursors.push(-1);
+        }
+    }
+
+    while(seriesesNotDoneCount > 0) {
+        earliestEpisodeIndex = firstNonEmptyEpisodeList;
+        // start by assuming that the first non-ended list has the earliest date
+        for (i = earliestEpisodeIndex + 1; i < cursors.length; ++i) {
+            // i is index in serieses and in cursors to compare with earliestEpisodeIndex index in the same
+            if (cursors[i] > -1) {
+                // console.log("cursors length " + cursors.length + "  i " + i);
+                // this cursor hasn't finished its list yet
+                if (this.serieses[i].episodes[cursors[i]].airDate <
+                    this.serieses[earliestEpisodeIndex].episodes[cursors[earliestEpisodeIndex]].airDate)
+                {
+                    earliestEpisodeIndex = i;
+                }
+            }
+        }
+        // now we have the earliest date that we want to push to the blended list
+        this.blended.push(this.serieses[earliestEpisodeIndex].episodes[cursors[earliestEpisodeIndex]]);
+        this.blended[this.blended.length - 1].setSeriesAbbreviation(this.serieses[earliestEpisodeIndex].name);
+        // advance the cursor
+        ++cursors[earliestEpisodeIndex];
+        // see if this cursor has reach the end of its list
+        if (cursors[earliestEpisodeIndex] >= this.serieses[earliestEpisodeIndex].episodes.length) {
+            // end of the list
+            cursors[earliestEpisodeIndex] = -1;
+            // finished one of the lists
+            --seriesesNotDoneCount;
+            // was that the first non-ended list?
+            if (earliestEpisodeIndex == firstNonEmptyEpisodeList) {
+                // then move it to the next non-ended list
+                while (firstNonEmptyEpisodeList < cursors.length && cursors[firstNonEmptyEpisodeList] == -1) {
+                    ++firstNonEmptyEpisodeList;
+                }
+            }
+        }
+    }
 };
 
 function Series(_name, _id) {
@@ -94,6 +149,7 @@ function Episode(_name, _airDate, _seasonNumber, _episodeNumber, _overview, _img
     this.episodeNumber = _episodeNumber;
     this.overview = _overview;
     this.imgPath = _imgPath;
+    this.seriesAbbreviation = "";  // this is only set when blending
 }
 Episode.MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 Episode.prototype.getSeasonEpisodeString = function() {
@@ -118,6 +174,16 @@ Episode.prototype.getDateString = function() {
     return this.airDate.getUTCFullYear() + " " +
            Episode.MONTHS[this.airDate.getUTCMonth()] + " " +
            this.airDate.getUTCDate();
+};
+Episode.prototype.setSeriesAbbreviation = function (seriesName) {
+    var words = seriesName.split(' ');
+    var buildAbbreviation = "";
+    angular.forEach(words, function(word) {
+        buildAbbreviation += word[0];
+    });
+    buildAbbreviation += " ";
+
+    this.seriesAbbreviation = buildAbbreviation;
 };
 
 var loginModal = $('#loginModal');
@@ -320,6 +386,7 @@ angular.module("FlickBlenderApp", [])
         }
 
         $scope.currentEpisodeList = userData.franchises[franchiseIndexClicked].blended;
+        $scope.listIsNotBlended = false;
     };
 
     $scope.addSeriesClick = function(franchiseIndex) {
@@ -331,6 +398,7 @@ angular.module("FlickBlenderApp", [])
     $scope.seriesListClick = function(franchiseIndexClicked, seriesIndexClicked) {
         $scope.currentEpisodeList = userData.franchises[franchiseIndexClicked].serieses[seriesIndexClicked].episodes;
         $scope.lastFranchiseClicked = -1;
+        $scope.listIsNotBlended = true;
     };
 
     $scope.episodeListClick = function(clickedIndex) {
@@ -388,9 +456,6 @@ angular.module("FlickBlenderApp", [])
 
             userData.franchises[workingFranchise.index].remakeBlendedEpisodeList();
 
-            // show in search results indication that this series was added
-            // $scope.$digest();
-
             return;
         }
 
@@ -422,9 +487,6 @@ angular.module("FlickBlenderApp", [])
                         .sortAndSetEpisodes(seasonAPICalls.getEpisodeList());
 
                     userData.franchises[workingFranchise.index].remakeBlendedEpisodeList();
-
-                    // show in search results indication that this series was added
-                    // $scope.$digest();
                 }, 1100);
             });
         });
