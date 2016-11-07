@@ -9,6 +9,7 @@ var API_KEY = "api_key=2f4c29e5d9bbf6c3e34220d46d0595b0";
 function Franchise(_name) {
     this.name = _name;
     this.serieses = [];
+    this.blended = [];
 }
 Franchise.prototype.addSeries = function(name, id) {
     // check for already present
@@ -33,12 +34,47 @@ Franchise.prototype.getSeriesById = function(id) {
     }
     return null;
 };
+Franchise.prototype.remakeBlendedEpisodeList = function () {
+    // TODO: remake blended episode list
+    this.blended = [{name: "this will be the blended " +
+                           this.name +
+                           " episode list"}];
+};
 
 function Series(_name, _id) {
     this.name = _name;
     this.id = _id;
     this.episodes = [];
 }
+Series.prototype.sortAndSetEpisodes = function (unsortedEpisodeList) {
+    console.log("called set and sort function - length " + unsortedEpisodeList.length);
+    this.episodes = unsortedEpisodeList;
+    this.episodes.sort(function(a, b) {
+        /*  test done with Encounter at Farpoint
+        if (a.name[0] == 'E' && a.name[1] == 'n' && b.name[0] == 'E' && b.name[1] == 'n') {
+            console.log("comparing: ");
+            console.log(a.name);
+            console.log(a.airDate);
+            console.log(b.name);
+            console.log(b.airDate);
+        }
+        */
+        if (a.airDate < b.airDate) {
+            return -1;
+        }
+        if (a.airDate > b.airDate) {
+            return 1;
+        }
+        // if same date, alphabetical order
+        if (a.name < b.name) {
+            return -1;
+        }
+        if (a.name > b.name) {
+            return 1;
+        }
+        return 0;
+    });
+};
 
 function Episode(_name, _airDate) {
     // console.log("constructing episode " + _name + " with date " + _airDate);
@@ -54,6 +90,19 @@ $( document ).ready(function() {
     $('#loginModal').modal({
         backdrop: 'static',
         keyboard: false
+    });
+
+    // focus text input when modal shows
+    // modal has id: string + 'Modal'
+    // input has id: string + 'Input'
+    angular.forEach([
+        'search',
+        'newFranchise'
+    ], function(idModalInput) {
+        $('#' + idModalInput + 'Modal').on('shown.bs.modal', function() {
+            console.log("shown modal event");
+            $('#' + idModalInput + 'Input').focus();
+        });
     });
 
     // display the login modal
@@ -199,7 +248,7 @@ angular.module("FlickBlenderApp", [])
         $scope.googleUser = response;
         $scope.googleProfile = response.getBasicProfile();
         loginModal.modal('hide');
-        $scope.$digest();
+        $scope.$apply();
     }
     window.onSignIn = onSignIn;
     $scope.signOut = function() {
@@ -207,7 +256,7 @@ angular.module("FlickBlenderApp", [])
         auth2.signOut().then(function () {
             console.log('User signed out.');
             $scope.googleProfile = null;  // remove the profile from the scope
-            $scope.$digest();
+            $scope.$apply();
             loginModal.modal('show');
         });
     };
@@ -228,10 +277,7 @@ angular.module("FlickBlenderApp", [])
             $scope.lastFranchiseClicked = franchiseIndexClicked;
         }
 
-        // TODO: show the blended episode list for this franchise
-        $scope.currentEpisodeList = [{name: "this will be the blended " +
-                                            userData.franchises[franchiseIndexClicked].name +
-                                            " episode list"}];
+        $scope.currentEpisodeList = userData.franchises[franchiseIndexClicked].blended;
     };
 
     $scope.addSeriesClick = function(franchiseIndex) {
@@ -251,7 +297,7 @@ angular.module("FlickBlenderApp", [])
     }
 })
 
-.controller('searchCtrl', function($scope, $http, userData, workingFranchise, seasonAPICalls, getEpisodeListService) {
+.controller('searchCtrl', function($scope, $http, $timeout, userData, workingFranchise, seasonAPICalls, getEpisodeListService) {
     $scope.searchResults = [];
     $scope.workingFranchise = workingFranchise;
 
@@ -261,6 +307,7 @@ angular.module("FlickBlenderApp", [])
         $http.get(MAIN_API_ADDRESS + "/search/multi?query=" +
                   workingFranchise.searchText + "&" + API_KEY)
         .then(function(response) {
+            // TODO: tell user if zero search results
             $scope.searchResults = response.data.results;
             $scope.added = function(id) {
                 return userData.franchises[workingFranchise.index].hasSeries(id);  // function with id parameter
@@ -291,7 +338,7 @@ angular.module("FlickBlenderApp", [])
                 new Episode(name, convertDate(seriesResult.release_date))
             ];
 
-            // TODO: remake blended episode list
+            userData.franchises[workingFranchise.index].remakeBlendedEpisodeList();
 
             // show in search results indication that this series was added
             // $scope.$digest();
@@ -315,18 +362,22 @@ angular.module("FlickBlenderApp", [])
                 seasonAPICalls.addUrl(id, i);
             }
             // call those urls
-            console.log("calling getEpisodes now...");
+            // console.log("calling getEpisodes now...");
             getEpisodeListService.getEpisodes(function() {
-                console.log("this is what getEpisodes gave me: ");
-                console.log(seasonAPICalls.getEpisodeList());
-                // TODO: sort this list by air date
-                // put episode list in userData
-                userData.franchises[workingFranchise.index].getSeriesById(id).episodes = seasonAPICalls.getEpisodeList();
+                $timeout(function() {  // timeout to give time to update userdata
+                    // console.log("this is what getEpisodes gave me: ");
+                    // console.log(seasonAPICalls.getEpisodeList());
 
-                // TODO: remake blended episode list
+                    // put episode list in userData
+                    userData.franchises[workingFranchise.index]
+                        .getSeriesById(id)
+                        .sortAndSetEpisodes(seasonAPICalls.getEpisodeList());
 
-                // show in search results indication that this series was added
-                // $scope.$digest();
+                    userData.franchises[workingFranchise.index].remakeBlendedEpisodeList();
+
+                    // show in search results indication that this series was added
+                    // $scope.$digest();
+                }, 1100);
             });
         });
     };

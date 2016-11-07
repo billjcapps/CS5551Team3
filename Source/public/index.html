@@ -15,12 +15,17 @@
 
     <script src="https://apis.google.com/js/platform.js" async defer></script>
 
+    <style>
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+            display: none !important;
+        }
+    </style>
+
 </head>
 <body ng-app="FlickBlenderApp">
 
 <!-- all of the modals here outside of the main container -->
 <!-- http://getbootstrap.com/javascript/#modals -->
-<!-- TODO: focus text box when modal opens -->
 
 <!-- login modal -->
 <div id="loginModal" class="modal fade" tabindex="-1" role="dialog">
@@ -63,7 +68,8 @@
             <div class="modal-body">
                 <form role="search">
                     <div class="form-group">
-                        <input type="text"
+                        <input id="searchInput"
+                               type="text"
                                class="form-control"
                                ng-model="workingFranchise.searchText"
                                enter-press="searchButtonClick()">
@@ -114,7 +120,8 @@
             <div class="modal-body">
                 <form role="search">
                     <div class="form-group">
-                        <input type="text"
+                        <input id="newFranchiseInput"
+                               type="text"
                                class="form-control"
                                placeholder="Franchise Name"
                                ng-model="franchiseName"
@@ -131,7 +138,7 @@
 </div>
 
 <!-- main page container -->
-<div class="container" ng-controller="FlickBlenderController" style="height: 90vh">
+<div class="container" ng-controller="FlickBlenderController" style="height: 90vh" ng-cloak>
     <nav class="navbar navbar-default">
         <div class="container-fluid"> 
             <div class="navbar-header">
@@ -240,6 +247,7 @@
 <script src="js/angular.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="js/bootstrap.min.js"></script>
+<script src="js/rbtree.js"></script>
 <script src="js/index.js"></script>
 
 <script src="js/unitTests.js"></script> <!-- comment this out for faster page loading -->
