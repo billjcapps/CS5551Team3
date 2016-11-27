@@ -14,17 +14,26 @@
 .input-group { margin-bottom:10px; }
 .separator { border-right: 1px solid #dfdfe0; }
 
-.franchiseName {
-    padding: 5px;
+.listItemWithButtons {
+    padding: 0;
 }
 
-.franchiseBtn {
-    margin: 0;
+.listItemWithButtons * {
     border-radius: 0;
+    height: 40px;
     border: white;
-    width: 160px !important;
 }
 
-.addSeriesBtn {
-    padding: 10px;
+.franchiseName {
+    width: 60%;
+    /* TODO: something more here to make it look different from series name */
+}
+
+.seriesName {
+    width: 80%;
+}
+
+.listItemBtn {
+    padding: 8px 0 0 0;
+    width: 20%;
 }

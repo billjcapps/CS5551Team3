@@ -71,6 +71,7 @@
                         <input id="searchInput"
                                type="text"
                                class="form-control"
+                               placeholder="Search for a series or movie..."
                                ng-model="workingFranchise.searchText"
                                enter-press="searchButtonClick()">
                     </div>
@@ -145,7 +146,7 @@
                 <a class="navbar-brand" href="#">Flick Blender</a>
             </div>
             <div class="navbar-header navbar-right">
-                <p class="navbar-text">Welcome {{googleProfile.getName()}}!</p>
+                <p class="navbar-text">Welcome {{googleProfile.getName().substr(0, googleProfile.getName().indexOf(' '))}}!</p>
                 <button id="signOutButton"
                         ng-click="signOut()"
                         value="Sign Out"
@@ -170,30 +171,43 @@
                 </div>
                 <div class="list-group">
                     <div ng-repeat="franchise in userData.franchises track by $index">
-                        <div class="list-group-item franchiseName clearfix">
-                            <a href="#"
-                               class="pull-left btn btn-default franchiseBtn"
-                               ng-click="franchiseListClick($index)">{{franchise.name}}</a>
-                            <a href="#"
-                               ng-click="addSeriesClick($index)"
-                               class="pull-right addSeriesBtn"
-                               data-toggle="modal"
-                               data-target="#searchModal">
-                                <span class="glyphicon glyphicon-plus"
-                                      aria-hidden="true"
-                                      style="color:@btn-default-color"></span>
+                        <div class="list-group-item btn-group listItemWithButtons clearfix">
+                            <button class="btn btn-default franchiseName"
+                                    ng-click="franchiseListClick($index)">{{franchise.name}}</button>
+                            <div ng-click="addSeriesClick($index)"
+                                 class="listItemBtn btn btn-default"
+                                 data-toggle="modal"
+                                 data-target="#searchModal">
+                                <a><span class="glyphicon glyphicon-plus"
+                                         aria-hidden="true"
+                                         style="color:@btn-default-color"></span></a>
                                 <!-- TODO: add tooltip to this -->
-                            </a>
-                        </div>
-                        <div class="list-group listOfSeriesesInFranchise" ng-hide="thisFranchiseHidden[$index]">
-                            <a href="#"
-                               class="list-group-item"
-                               ng-repeat="series in franchise.serieses track by $index"
-                               ng-click="seriesListClick($parent.$index, $index)">{{series.name}}</a>
+                            </div>
+                            <div ng-click="deleteFranchiseClick($index)"
+                                 class="listItemBtn btn btn-default">
+                                <a><span class="glyphicon glyphicon-remove"
+                                         aria-hidden="true"
+                                         style="color:@btn-default-color"></span></a>
+                                <!-- TODO: add tooltip to this -->
+                            </div>
+                        </div>  <!-- TODO: need separator below, and maybe above franchise name -->
+                        <div class="list-group" ng-hide="thisFranchiseHidden[$index]">
+                            <div class="list-group-item btn-group listItemWithButtons clearfix"
+                                 ng-repeat="series in franchise.serieses track by $index">
+                                <button class="btn btn-default seriesName"
+                                        ng-click="seriesListClick($parent.$index, $index)">{{series.name}}</button>
+                                <div class="listItemBtn btn btn-default"
+                                     ng-click="deleteSeriesClick($parent.$index, $index)">
+                                    <a><span class="glyphicon glyphicon-remove"
+                                          aria-hidden="true"
+                                             style="color:@btn-default-color"></span></a>
+                                        <!-- TODO: add tooltip to this -->
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>  <!-- TODO: when the last franchise is minimized, the bottom rounded panel edge doesn't work right -->
         </div>
         <div class="col-sm-4 col-md-4">
             <div class="panel panel-primary">

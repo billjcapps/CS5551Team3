@@ -176,6 +176,7 @@ Episode.prototype.getDateString = function() {
            this.airDate.getUTCDate();
 };
 Episode.prototype.setSeriesAbbreviation = function (seriesName) {
+    // TODO: if this is a movie, no series abbreviation
     var words = seriesName.split(' ');
     var buildAbbreviation = "";
     angular.forEach(words, function(word) {
@@ -346,6 +347,15 @@ angular.module("FlickBlenderApp", [])
         data.franchises.push(new Franchise(newFranchiseName));
     };
 
+    data.deleteFranchise = function(franchiseIndex) {
+        data.franchises.splice(franchiseIndex, 1);
+    };
+
+    data.deleteSeries = function(franchiseIndex, seriesIndex) {
+        data.franchises[franchiseIndex].serieses.splice(seriesIndex, 1);
+        data.franchises[franchiseIndex].remakeBlendedEpisodeList();
+    };
+
     return data;
 })
 
@@ -395,10 +405,23 @@ angular.module("FlickBlenderApp", [])
         console.log(workingFranchise.searchText);
     };
 
+    $scope.deleteFranchiseClick = function(franchiseIndex) {
+        if (confirm("Are you sure you want to remove this franchise?\n" + userData.franchises[franchiseIndex].name)) {
+            userData.deleteFranchise(franchiseIndex);
+        }
+    };
+
     $scope.seriesListClick = function(franchiseIndexClicked, seriesIndexClicked) {
         $scope.currentEpisodeList = userData.franchises[franchiseIndexClicked].serieses[seriesIndexClicked].episodes;
         $scope.lastFranchiseClicked = -1;
         $scope.listIsNotBlended = true;
+    };
+
+    $scope.deleteSeriesClick = function(franchiseIndexClicked, seriesIndexClicked) {
+        if (confirm("Are you sure you want to remove this series/movie?\n" +
+                    userData.franchises[franchiseIndexClicked].serieses[seriesIndexClicked].name)) {
+            userData.deleteSeries(franchiseIndexClicked, seriesIndexClicked);
+        }
     };
 
     $scope.episodeListClick = function(clickedIndex) {
