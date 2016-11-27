@@ -194,7 +194,7 @@
                         <div class="list-group" ng-hide="thisFranchiseHidden[$index]">
                             <div class="list-group-item btn-group listItemWithButtons clearfix"
                                  ng-repeat="series in franchise.serieses track by $index">
-                                <button class="btn btn-default seriesName"
+                                <button class="btn btn-default nameWithOneButton"
                                         ng-click="seriesListClick($parent.$index, $index)">{{series.name}}</button>
                                 <div class="listItemBtn btn btn-default"
                                      ng-click="deleteSeriesClick($parent.$index, $index)">
@@ -215,13 +215,29 @@
                     <h3 class="panel-title">Episodes</h3>
                 </div>
                 <div class="list-group">
-                    <a href="#"
-                       class="list-group-item"
-                       ng-repeat="episode in currentEpisodeList track by $index"
-                       ng-click="episodeListClick($index)">
-                        <span ng-hide="listIsNotBlended">{{episode.seriesAbbreviation}}</span>
-                        {{episode.getSeasonEpisodeString()}}
-                        {{episode.name}}</a>
+                    <div class="list-group-item btn-group listItemWithButtons clearfix"
+                         ng-repeat="episode in currentEpisodeList track by $index">
+                        <button class="btn btn-default nameWithOneButton"
+                                ng-click="episodeListClick($index)">
+                            <span ng-hide="listIsNotBlended">{{episode.seriesAbbreviation}}</span>
+                            {{episode.getSeasonEpisodeString()}}
+                            {{episode.name}}
+                        </button>
+                        <div class="listItemBtn btn btn-default"
+                             ng-click="toggleWatchedClick($index)">
+                            <a>
+                                <span class="glyphicon glyphicon-eye-close"
+                                     aria-hidden="true"
+                                     style="color:lightgrey"
+                                     ng-hide="episode.watched"></span>
+                                <span class="glyphicon glyphicon-check"
+                                      aria-hidden="true"
+                                      style="color:green"
+                                      ng-hide="!episode.watched"></span>
+                            </a>
+                            <!-- TODO: add tooltip to this -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

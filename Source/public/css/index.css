@@ -20,8 +20,8 @@
 
 .listItemWithButtons * {
     border-radius: 0;
-    height: 40px;
     border: white;
+    white-space: normal;
 }
 
 .franchiseName {
@@ -29,11 +29,12 @@
     /* TODO: something more here to make it look different from series name */
 }
 
-.seriesName {
+.nameWithOneButton {
     width: 80%;
+    text-align: left;
 }
 
 .listItemBtn {
-    padding: 8px 0 0 0;
+    padding: 8px 0 4px;
     width: 20%;
 }

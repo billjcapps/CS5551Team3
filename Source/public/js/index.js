@@ -150,6 +150,7 @@ function Episode(_name, _airDate, _seasonNumber, _episodeNumber, _overview, _img
     this.overview = _overview;
     this.imgPath = _imgPath;
     this.seriesAbbreviation = "";  // this is only set when blending
+    this.watched = false;
 }
 Episode.MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 Episode.prototype.getSeasonEpisodeString = function() {
@@ -426,7 +427,11 @@ angular.module("FlickBlenderApp", [])
 
     $scope.episodeListClick = function(clickedIndex) {
         $scope.focusEpisode = $scope.currentEpisodeList[clickedIndex];
-    }
+    };
+
+    $scope.toggleWatchedClick = function(index) {
+        $scope.currentEpisodeList[index].watched = ! $scope.currentEpisodeList[index].watched;
+    };
 })
 
 .controller('searchCtrl', function($scope, $http, $timeout, userData, workingFranchise, seasonAPICalls, getEpisodeListService) {
