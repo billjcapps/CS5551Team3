@@ -177,7 +177,12 @@ Episode.prototype.getDateString = function() {
            this.airDate.getUTCDate();
 };
 Episode.prototype.setSeriesAbbreviation = function (seriesName) {
-    // TODO: if this is a movie, no series abbreviation
+    if (this.seasonNumber == 0) {  // movie
+        this.seriesAbbreviation = "";
+        return;
+    }
+
+    // not a movie
     var words = seriesName.split(' ');
     var buildAbbreviation = "";
     angular.forEach(words, function(word) {
