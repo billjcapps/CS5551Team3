@@ -242,6 +242,50 @@ angular.module("FlickBlenderApp", [])
     };
 })
 
+.factory("auth", function(userData) {
+    // google OAuth stuff
+    var signInCallbacks = [];
+
+    var authInterface = {
+        googleUser: null,
+        googleProfile: null
+    };
+
+    authInterface.signInNotify = function(callback) {
+        signInCallbacks.push(callback);
+    };
+
+    function onSignIn(response) {
+        console.log("onSignIn function");
+        authInterface.googleUser = response;
+        authInterface.googleProfile = response.getBasicProfile();
+
+        // TODO: load data
+
+        // call all notify callbacks
+        angular.forEach(signInCallbacks, function(callback) {
+            callback();
+        });
+
+        loginModal.modal('hide');
+    }
+    window.onSignIn = onSignIn;
+
+    authInterface.signOut = function() {
+
+        // TODO: save data
+
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+            console.log('User signed out.');
+            authInterface.googleProfile = null;  // remove the profile from the scope
+            loginModal.modal('show');
+        });
+    };
+
+    return authInterface;
+})
+
 // for sharing information between controllers about which franchise we are working with
 .factory("workingFranchise", function() {
     return {
@@ -439,32 +483,17 @@ angular.module("FlickBlenderApp", [])
     return data;
 })
 
-.controller("FlickBlenderController", function($scope, userData, workingFranchise) {
-    // google OAth stuff
-    function onSignIn(response) {
-        console.log("onSignIn function");
-        $scope.googleUser = response;
-        $scope.googleProfile = response.getBasicProfile();
-
-        // TODO: load data
-
-        loginModal.modal('hide');
+.controller("FlickBlenderController", function($scope, auth, userData, workingFranchise) {
+    auth.signInNotify(function() {
+        $scope.googleUser = auth.googleUser;
+        $scope.googleProfile = auth.googleProfile;
         $scope.$apply();
-    }
-    window.onSignIn = onSignIn;
+    });
     $scope.signOut = function() {
-
-        // TODO: save data
-
-        var auth2 = gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function () {
-            console.log('User signed out.');
-            $scope.googleProfile = null;  // remove the profile from the scope
-            $scope.$apply();
-            loginModal.modal('show');
-        });
+        auth.signOut();
+        $scope.googleUser = null;
+        $scope.googleProfile = null;
     };
-
 
     $scope.userData = { franchises: userData.franchises };
 
