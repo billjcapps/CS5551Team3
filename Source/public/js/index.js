@@ -242,7 +242,7 @@ angular.module("FlickBlenderApp", [])
     };
 })
 
-.factory("auth", function(userData) {
+.factory("auth", function() {
     // google OAuth stuff
     var signInCallbacks = [];
 
@@ -260,9 +260,9 @@ angular.module("FlickBlenderApp", [])
         authInterface.googleUser = response;
         authInterface.googleProfile = response.getBasicProfile();
 
-        // TODO: load data
-
         // call all notify callbacks
+        // (one callback is userData to to load the data from database,
+        // another callback is main controller to display the username)
         angular.forEach(signInCallbacks, function(callback) {
             callback();
         });
@@ -272,8 +272,6 @@ angular.module("FlickBlenderApp", [])
     window.onSignIn = onSignIn;
 
     authInterface.signOut = function() {
-
-        // TODO: save data
 
         var auth2 = gapi.auth2.getAuthInstance();
         auth2.signOut().then(function () {
@@ -356,7 +354,7 @@ angular.module("FlickBlenderApp", [])
     };
 })
 
-.factory("userData", function($http, seasonAPICalls, getEpisodeListService, $timeout) {
+.factory("userData", function($http, seasonAPICalls, getEpisodeListService, $timeout, auth) {
     var data = {franchises: []};
 
     /*
@@ -400,10 +398,12 @@ angular.module("FlickBlenderApp", [])
 
     data.addFranchise = function(newFranchiseName) {
         data.franchises.push(new Franchise(newFranchiseName));
+        data.save();
     };
 
     data.deleteFranchise = function(franchiseIndex) {
         data.franchises.splice(franchiseIndex, 1);
+        data.save();
     };
 
     data.addSeries = function(seriesResult, workingFranchise) {
@@ -430,7 +430,7 @@ angular.module("FlickBlenderApp", [])
 
             data.franchises[workingFranchise.index].remakeBlendedEpisodeList();
 
-            return;
+            return data.save();
         }
 
         // add episodes (or update episode list) for this series
@@ -455,6 +455,8 @@ angular.module("FlickBlenderApp", [])
                         .sortAndSetEpisodes(seasonAPICalls.getEpisodeList());
 
                     data.franchises[workingFranchise.index].remakeBlendedEpisodeList();
+
+                    data.save();
                 }, 1100);
             });
         });
@@ -463,22 +465,31 @@ angular.module("FlickBlenderApp", [])
     data.deleteSeries = function(franchiseIndex, seriesIndex) {
         data.franchises[franchiseIndex].serieses.splice(seriesIndex, 1);
         data.franchises[franchiseIndex].remakeBlendedEpisodeList();
+
+        data.save();
     };
 
     // remote data
-    data.save = function(id) {
+    data.save = function() {
+        console.log(auth.googleUser);
+        console.log(auth.googleProfile);
         $http.post(SAVE_URL, {
-            id: id,
-            data: { franchises: userData.franchises }
+            id: "google" + auth.googleProfile.getId(),  // if other auth methods are implemented, put a different code before id
+            data: { franchises: data.franchises }
         }).then(function(response) {
             alert("response for data save: " + response);
         });
     };
 
-    data.load = function(id) {
-        alert("load not implemented");
+    data.load = function() {
+        // TODO: implement load
+        alert("load not implemented - loading blank data");
         data.franchises = [];
     };
+
+    auth.signInNotify(function() {
+        data.load();
+    });
 
     return data;
 })

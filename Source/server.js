@@ -16,17 +16,24 @@ var StatusEnum = Object.freeze({
 });
 
 var express = require('express');
+var bodyParser = require("body-parser");
+var cors = require("cors");
 
 // custom modules
 var databaseInterface = require("./dbInterface.js");
 
 var expressApplication = express();
 
+expressApplication.use(cors());
+expressApplication.use(bodyParser.json());
+expressApplication.use(bodyParser.urlencoded({ extended: true }));
+
 /**
  *  save data to database
  *  post object with "id" attribute and "data" attribute
  */
 expressApplication.post(SAVE_URL, function (req, res) {
+    console.log(req.body);
     var id = req.body.id;
     var dataToSave = req.body.data;
 
