@@ -2,8 +2,13 @@
  * JavaScript for index.html
  */
 
+// search data API
 var MAIN_API_ADDRESS = "https://api.themoviedb.org/3";
 var API_KEY = "api_key=2f4c29e5d9bbf6c3e34220d46d0595b0";
+
+// user data APIs
+var SAVE_URL = "/save";
+var LOAD_URL = "/load";
 
 // data structures
 function Franchise(_name) {
@@ -307,7 +312,7 @@ angular.module("FlickBlenderApp", [])
     };
 })
 
-.factory("userData", function() {
+.factory("userData", function($http, seasonAPICalls, getEpisodeListService, $timeout) {
     var data = {franchises: []};
 
     /*
@@ -357,9 +362,78 @@ angular.module("FlickBlenderApp", [])
         data.franchises.splice(franchiseIndex, 1);
     };
 
+    data.addSeries = function(seriesResult, workingFranchise) {
+        var id = seriesResult.id;
+        var name = seriesResult.original_name;
+        if (name === undefined) {
+            name = seriesResult.original_title;
+        }
+        console.log(name);
+
+        data.franchises[workingFranchise.index].addSeries(name, id);
+
+        if (seriesResult.media_type == "movie") {
+            // console.log(seriesResult);
+            // to signal that it is a movie, seasonNumber is set to 0
+            data.franchises[workingFranchise.index].getSeriesById(id).episodes = [
+                new Episode(name,
+                    convertDate(seriesResult.release_date),
+                    0,
+                    0,
+                    seriesResult.overview,
+                    seriesResult.backdrop_path)
+            ];
+
+            data.franchises[workingFranchise.index].remakeBlendedEpisodeList();
+
+            return;
+        }
+
+        // add episodes (or update episode list) for this series
+        // get number of seasons
+        $http.get(MAIN_API_ADDRESS + "/tv/" + id + "?" + API_KEY).then(function(response) {
+            var seasonCount = response.data.number_of_seasons;
+            // prepare set of urls to call
+            seasonAPICalls.clearUrls();
+            for (var i = seasonCount; i > 0; --i) {
+                seasonAPICalls.addUrl(id, i);
+            }
+            // call those urls
+            // console.log("calling getEpisodes now...");
+            getEpisodeListService.getEpisodes(function() {
+                $timeout(function() {  // timeout to give time to update userdata
+                    // console.log("this is what getEpisodes gave me: ");
+                    // console.log(seasonAPICalls.getEpisodeList());
+
+                    // put episode list in userData
+                    data.franchises[workingFranchise.index]
+                        .getSeriesById(id)
+                        .sortAndSetEpisodes(seasonAPICalls.getEpisodeList());
+
+                    data.franchises[workingFranchise.index].remakeBlendedEpisodeList();
+                }, 1100);
+            });
+        });
+    };
+
     data.deleteSeries = function(franchiseIndex, seriesIndex) {
         data.franchises[franchiseIndex].serieses.splice(seriesIndex, 1);
         data.franchises[franchiseIndex].remakeBlendedEpisodeList();
+    };
+
+    // remote data
+    data.save = function(id) {
+        $http.post(SAVE_URL, {
+            id: id,
+            data: { franchises: userData.franchises }
+        }).then(function(response) {
+            alert("response for data save: " + response);
+        });
+    };
+
+    data.load = function(id) {
+        alert("load not implemented");
+        data.franchises = [];
     };
 
     return data;
@@ -371,11 +445,17 @@ angular.module("FlickBlenderApp", [])
         console.log("onSignIn function");
         $scope.googleUser = response;
         $scope.googleProfile = response.getBasicProfile();
+
+        // TODO: load data
+
         loginModal.modal('hide');
         $scope.$apply();
     }
     window.onSignIn = onSignIn;
     $scope.signOut = function() {
+
+        // TODO: save data
+
         var auth2 = gapi.auth2.getAuthInstance();
         auth2.signOut().then(function () {
             console.log('User signed out.');
@@ -386,7 +466,7 @@ angular.module("FlickBlenderApp", [])
     };
 
 
-    $scope.userData = userData;
+    $scope.userData = { franchises: userData.franchises };
 
     $scope.lastFranchiseClicked = -1;  // second click toggles hiding of serieses
     $scope.thisFranchiseHidden = userData.franchises.map(function() {return true;});  // a true for each franchise
@@ -439,7 +519,7 @@ angular.module("FlickBlenderApp", [])
     };
 })
 
-.controller('searchCtrl', function($scope, $http, $timeout, userData, workingFranchise, seasonAPICalls, getEpisodeListService) {
+.controller('searchCtrl', function($scope, $http, $timeout, userData, workingFranchise) {
     $scope.searchResults = [];
     $scope.workingFranchise = workingFranchise;
 
@@ -467,62 +547,11 @@ angular.module("FlickBlenderApp", [])
         var seriesResult = $scope.searchResults[seriesResultIndex];
         console.log(seriesResult);
 
-        var id = seriesResult.id;
-        var name = seriesResult.original_name;
-        if (name === undefined) {
-            name = seriesResult.original_title;
-        }
-        console.log(name);
-        userData.franchises[workingFranchise.index].addSeries(name, id);
-
-        if (seriesResult.media_type == "movie") {
-            // console.log(seriesResult);
-            // to signal that it is a movie, seasonNumber is set to 0
-            userData.franchises[workingFranchise.index].getSeriesById(id).episodes = [
-                new Episode(name,
-                            convertDate(seriesResult.release_date),
-                            0,
-                            0,
-                            seriesResult.overview,
-                            seriesResult.backdrop_path)
-            ];
-
-            userData.franchises[workingFranchise.index].remakeBlendedEpisodeList();
-
-            return;
-        }
-
-        // add episodes (or update episode list) for this series
+        userData.addSeries(seriesResult, workingFranchise);
 
         // TODO: tell the user that this is how you update the episode list
         // (click on the series in the search results)
         // (or make a different way of updating it)
-
-        // get number of seasons
-        $http.get(MAIN_API_ADDRESS + "/tv/" + id + "?" + API_KEY)
-        .then(function(response) {
-            var seasonCount = response.data.number_of_seasons;
-            // prepare set of urls to call
-            seasonAPICalls.clearUrls();
-            for (var i = seasonCount; i > 0; --i) {
-                seasonAPICalls.addUrl(id, i);
-            }
-            // call those urls
-            // console.log("calling getEpisodes now...");
-            getEpisodeListService.getEpisodes(function() {
-                $timeout(function() {  // timeout to give time to update userdata
-                    // console.log("this is what getEpisodes gave me: ");
-                    // console.log(seasonAPICalls.getEpisodeList());
-
-                    // put episode list in userData
-                    userData.franchises[workingFranchise.index]
-                        .getSeriesById(id)
-                        .sortAndSetEpisodes(seasonAPICalls.getEpisodeList());
-
-                    userData.franchises[workingFranchise.index].remakeBlendedEpisodeList();
-                }, 1100);
-            });
-        });
     };
 })
 
