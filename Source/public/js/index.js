@@ -485,13 +485,11 @@ angular.module("FlickBlenderApp", [])
 
 .controller("FlickBlenderController", function($scope, auth, userData, workingFranchise) {
     auth.signInNotify(function() {
-        $scope.googleUser = auth.googleUser;
         $scope.googleProfile = auth.googleProfile;
         $scope.$apply();
     });
     $scope.signOut = function() {
         auth.signOut();
-        $scope.googleUser = null;
         $scope.googleProfile = null;
     };
 
