@@ -484,7 +484,7 @@ angular.module("FlickBlenderApp", [])
     data.load = function() {
         // TODO: implement load
         alert("load not implemented - loading blank data");
-        data.franchises = [];
+        data.franchises.length = 0;
     };
 
     auth.signInNotify(function() {
