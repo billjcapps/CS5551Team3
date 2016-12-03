@@ -3,12 +3,13 @@
  */
 
 // search data API
-var MAIN_API_ADDRESS = "https://api.themoviedb.org/3";
-var API_KEY = "api_key=2f4c29e5d9bbf6c3e34220d46d0595b0";
+const MAIN_API_ADDRESS = "https://api.themoviedb.org/3";
+const API_KEY = "api_key=2f4c29e5d9bbf6c3e34220d46d0595b0";
+const IMG_URL = "https://image.tmdb.org/t/p/w500";
 
 // user data APIs
-var SAVE_URL = "/save";
-var LOAD_URL = "/load";
+const SAVE_URL = "/save";
+const LOAD_URL = "/load";
 
 // data structures
 /**
@@ -233,11 +234,14 @@ Episode.prototype.getSeasonEpisodeString = function() {
     return toReturn;
 };
 Episode.prototype.getDateString = function() {
-    return this.airDate.getUTCFullYear() + " " +
-           Episode.MONTHS[this.airDate.getUTCMonth()] + " " +
-           this.airDate.getUTCDate();
+    if (this.airDate && this.airDate.getUTCFullYear()) {
+        return this.airDate.getUTCFullYear() + " " +
+               Episode.MONTHS[this.airDate.getUTCMonth()] + " " +
+               this.airDate.getUTCDate();
+    }
+    return "";
 };
-Episode.prototype.setSeriesAbbreviation = function (seriesName) {
+Episode.prototype.setSeriesAbbreviation = function(seriesName) {
     if (this.seasonNumber == 0) {  // movie
         this.seriesAbbreviation = "";
         return;
@@ -252,6 +256,12 @@ Episode.prototype.setSeriesAbbreviation = function (seriesName) {
     buildAbbreviation += " ";
 
     this.seriesAbbreviation = buildAbbreviation;
+};
+Episode.prototype.getImgPath = function() {
+    if (this.imgPath) {
+        return IMG_URL + this.imgPath;
+    }
+    return "img/Logo.png";
 };
 
 var loginModal = $('#loginModal');
@@ -600,6 +610,8 @@ angular.module("FlickBlenderApp", [])
 
     $scope.lastFranchiseClicked = -1;  // second click toggles hiding of serieses
     $scope.thisFranchiseHidden = userData.franchises.map(function() {return true;});  // a true for each franchise
+
+    $scope.focusEpisode = new Episode({});
 
     $scope.franchiseListClick = function(franchiseIndexClicked) {
         console.log(userData.franchises[franchiseIndexClicked].name + " franchise clicked");
