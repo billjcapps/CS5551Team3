@@ -470,7 +470,31 @@ angular.module("FlickBlenderApp", [])
         }
         console.log(name);
 
+        // save watched status if series already exists
+        var listOfWatchedEpisodes = [];
+        if (data.franchises[workingFranchise.index].hasSeries(id)) {
+            var thisSeries = data.franchises[workingFranchise.index].getSeriesById(id);
+            angular.forEach(thisSeries.episodes, function(episode) {
+                if (episode.watched) {
+                    listOfWatchedEpisodes.push(episode.seasonNumber * 1000 + episode.episodeNumber);
+                }
+            });
+        }
+        function reapplyWatchedEpisodes(listOfWatchedEpisodes) {
+            var thisSeries = data.franchises[workingFranchise.index].getSeriesById(id);
+            angular.forEach(listOfWatchedEpisodes, function(episodeCode) {
+                for (var i = 0; i < thisSeries.episodes.length; ++i) {
+                    if ((thisSeries.episodes[i].seasonNumber * 1000 + thisSeries.episodes[i].episodeNumber) == episodeCode) {
+                        thisSeries.episodes[i].watched = true;
+                        break;
+                    }
+                }
+            });
+        }
+
         data.franchises[workingFranchise.index].addSeries(name, id);
+
+        // add episodes (or update episode list) for this series
 
         if (seriesResult.media_type == "movie") {
             // console.log(seriesResult);
@@ -483,13 +507,13 @@ angular.module("FlickBlenderApp", [])
                     seriesResult.overview,
                     seriesResult.backdrop_path)
             ];
+            reapplyWatchedEpisodes(listOfWatchedEpisodes);
 
             data.franchises[workingFranchise.index].remakeBlendedEpisodeList();
 
             return data.save();
         }
 
-        // add episodes (or update episode list) for this series
         // get number of seasons
         $http.get(MAIN_API_ADDRESS + "/tv/" + id + "?" + API_KEY).then(function(response) {
             var seasonCount = response.data.number_of_seasons;
@@ -509,6 +533,7 @@ angular.module("FlickBlenderApp", [])
                     data.franchises[workingFranchise.index]
                         .getSeriesById(id)
                         .sortAndSetEpisodes(seasonAPICalls.getEpisodeList());
+                    reapplyWatchedEpisodes(listOfWatchedEpisodes);
 
                     data.franchises[workingFranchise.index].remakeBlendedEpisodeList();
 
@@ -657,8 +682,6 @@ angular.module("FlickBlenderApp", [])
         // TODO: tell the user that this is how you update the episode list
         // (click on the series in the search results)
         // (or make a different way of updating it)
-
-        // TODO: fix bug: update overwrites watched status
     };
 })
 
