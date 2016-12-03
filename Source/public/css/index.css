@@ -38,3 +38,7 @@
     padding: 8px 0 4px;
     width: 20%;
 }
+
+.hz {
+    display: inline-flex !important;
+}

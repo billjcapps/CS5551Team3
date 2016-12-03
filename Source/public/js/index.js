@@ -290,6 +290,11 @@ $( document ).ready(function() {
     // enable tooltips
     $('[data-toggle="tooltip"]').tooltip();
 
+    // don't scroll window when clicking on some links
+    $('.no-move').click(function(event){
+        event.preventDefault();
+    });
+
     // display the login modal
     loginModal.modal('show');
 });
@@ -658,6 +663,9 @@ angular.module("FlickBlenderApp", [])
 
     $scope.episodeListClick = function(clickedIndex) {
         $scope.focusEpisode = $scope.currentEpisodeList[clickedIndex];
+        if ($(window).width() < 768){
+            $('#episodeDetails')[0].scrollIntoView(true);
+        }
     };
 
     $scope.toggleWatchedClick = function(index) {

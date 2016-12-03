@@ -83,7 +83,8 @@
             </div>
             <div ng-repeat="show in searchResults track by $index" class= "modal-body">
                 <div class="media-left">
-                    <a href="#" ng-click="searchResultClick($index)">
+                    <a href="#"
+                       ng-click="searchResultClick($index)">
                         <img width="64"
                              height="64"
                              class="media-object img-rounded"
@@ -218,7 +219,7 @@
                 <div class="panel-heading clearfix">
                     <h3 class="panel-title pull-left">Episodes</h3>
                     <a href="#"
-                       class="pull-right"
+                       class="pull-right no-move"
                        ng-click="toggleHideWatchedClick()">
                         <span class="glyphicon glyphicon-eye-open"
                               ng-hide="! hideWatched"
@@ -266,25 +267,37 @@
             </div>
         </div>
         <div class="col-sm-4 col-md-4">
-            <div class="panel panel-primary">
+            <div class="panel panel-primary" id="episodeDetails">
                 <div class="panel-heading clearfix">
                     <h3 class="panel-title pull-left">Episode Details</h3>
                     <div class="pull-right">
-                        <a href="#"
-                           ng-click="toggleFocusWatchedClick()">
-                            <span class="glyphicon glyphicon-check"
-                                  ng-hide="! focusEpisode.watched"
-                                  aria-hidden="true"
-                                  style="color:white"
-                                  data-toggle="tooltip"
-                                  title="Un-mark this episode as watched"></span>
-                            <span class="glyphicon glyphicon-eye-close"
-                                  ng-hide="focusEpisode.watched"
-                                  aria-hidden="true"
-                                  style="color:white"
-                                  data-toggle="tooltip"
-                                  title="Mark this episode as watched"></span>
-                        </a>
+                        <span class="hz">
+                            <a href="#"
+                               class="no-move"
+                               ng-click="toggleFocusWatchedClick()">
+                                <span class="glyphicon glyphicon-check"
+                                      ng-hide="! focusEpisode.watched"
+                                      aria-hidden="true"
+                                      style="color:white"
+                                      data-toggle="tooltip"
+                                      title="Un-mark this episode as watched"></span>
+                                <span class="glyphicon glyphicon-eye-close"
+                                      ng-hide="focusEpisode.watched"
+                                      aria-hidden="true"
+                                      style="color:white"
+                                      data-toggle="tooltip"
+                                      title="Mark this episode as watched"></span>
+                            </a>
+                            <a href="#"
+                               class="visible-xs"
+                               style="margin-left: 20px;">
+                                <span class="glyphicon glyphicon-arrow-up"
+                                      aria-hidden="true"
+                                      style="color:white"
+                                      data-toggle="tooltip"
+                                      title="Top of page"></span>
+                            </a>
+                        </span>
                     </div>
                 </div>
                 <div class="panel-body">
