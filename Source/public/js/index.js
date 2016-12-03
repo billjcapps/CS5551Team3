@@ -679,6 +679,7 @@ angular.module("FlickBlenderApp", [])
 
     $scope.toggleFocusWatchedClick = function() {
         $scope.focusEpisode.watched = ! $scope.focusEpisode.watched;
+        userData.save();
     };
 })
 
