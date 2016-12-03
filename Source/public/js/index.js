@@ -287,6 +287,9 @@ $( document ).ready(function() {
         });
     });
 
+    // enable tooltips
+    $('[data-toggle="tooltip"]').tooltip();
+
     // display the login modal
     loginModal.modal('show');
 });

@@ -165,8 +165,9 @@
                        data-target="#newFranchiseModal">
                         <span class="glyphicon glyphicon-plus"
                               aria-hidden="true"
-                              style="color:white"></span>
-                        <!-- TODO: add tooltip to this -->
+                              style="color:white"
+                              data-toggle="tooltip"
+                              title="Add a new franchise"></span>
                     </a>
                 </div>
                 <div class="list-group">
@@ -180,15 +181,17 @@
                                  data-target="#searchModal">
                                 <a><span class="glyphicon glyphicon-plus"
                                          aria-hidden="true"
-                                         style="color:@btn-default-color"></span></a>
-                                <!-- TODO: add tooltip to this -->
+                                         style="color:@btn-default-color"
+                                         data-toggle="tooltip"
+                                         title="Add a new series or movie"></span></a>
                             </div>
                             <div ng-click="deleteFranchiseClick($index)"
                                  class="listItemBtn btn btn-default">
                                 <a><span class="glyphicon glyphicon-remove"
                                          aria-hidden="true"
-                                         style="color:@btn-default-color"></span></a>
-                                <!-- TODO: add tooltip to this -->
+                                         style="color:@btn-default-color"
+                                         data-toggle="tooltip"
+                                         title="Delete this franchise"></span></a>
                             </div>
                         </div>  <!-- TODO: need separator below, and maybe above franchise name -->
                         <div class="list-group" ng-hide="thisFranchiseHidden[$index]">
@@ -199,9 +202,10 @@
                                 <div class="listItemBtn btn btn-default"
                                      ng-click="deleteSeriesClick($parent.$index, $index)">
                                     <a><span class="glyphicon glyphicon-remove"
-                                          aria-hidden="true"
-                                             style="color:@btn-default-color"></span></a>
-                                        <!-- TODO: add tooltip to this -->
+                                             aria-hidden="true"
+                                             style="color:@btn-default-color"
+                                             data-toggle="tooltip"
+                                             title="Delete this series"></span></a>
                                 </div>
                             </div>
                         </div>
@@ -219,14 +223,16 @@
                         <span class="glyphicon glyphicon-eye-open"
                               ng-hide="! hideWatched"
                               aria-hidden="true"
-                              style="color:white"></span>
+                              style="color:white"
+                              data-toggle="tooltip"
+                              title="Show all episodes"></span>
                         <span class="glyphicon glyphicon-eye-close"
                               ng-hide="hideWatched"
                               aria-hidden="true"
-                              style="color:white"></span>
-                        <!-- TODO: add tooltip to these -->
+                              style="color:white"
+                              data-toggle="tooltip"
+                              title="Hide watched episodes"></span>
                     </a>
-                    <!-- TODO: option to only show unwatched episodes -->
                 </div>
                 <div class="list-group">
                     <div class="list-group-item btn-group listItemWithButtons clearfix"
@@ -242,15 +248,18 @@
                              ng-click="toggleWatchedClick($index)">
                             <a>
                                 <span class="glyphicon glyphicon-eye-close"
-                                     aria-hidden="true"
-                                     style="color:lightgrey"
-                                     ng-hide="episode.watched"></span>
+                                      aria-hidden="true"
+                                      style="color:lightgrey"
+                                      ng-hide="episode.watched"
+                                      data-toggle="tooltip"
+                                      title="Mark this episode as watched"></span>
                                 <span class="glyphicon glyphicon-check"
                                       aria-hidden="true"
                                       style="color:green"
-                                      ng-hide="!episode.watched"></span>
+                                      ng-hide="!episode.watched"
+                                      data-toggle="tooltip"
+                                      title="Un-mark this episode as watched"></span>
                             </a>
-                            <!-- TODO: add tooltip to this -->
                         </div>
                     </div>
                 </div>
