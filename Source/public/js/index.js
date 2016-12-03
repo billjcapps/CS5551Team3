@@ -11,10 +11,33 @@ var SAVE_URL = "/save";
 var LOAD_URL = "/load";
 
 // data structures
-function Franchise(_name) {
-    this.name = _name;
-    this.serieses = [];
-    this.blended = [];
+/**
+ * Franchise constructor
+ * @param {(string|object)} _arg name of franchise or raw franchise object
+ * @constructor
+ */
+function Franchise(_arg) {
+    if (typeof _arg == "string") {
+        this.name = _arg;
+        this.serieses = [];
+        this.blended = [];
+    }
+    else {  // object
+        console.log("in franchise ctor with:");
+        console.log(_arg);
+
+        this.name = _arg.name;
+        this.blended = [];
+        this.serieses = [];
+
+        var _this = this;  // to use it inside a different function
+
+        angular.forEach(_arg.serieses, function(series) {
+            _this.addSeries(series);
+        });
+
+        this.remakeBlendedEpisodeList();
+    }
 }
 Franchise.prototype.addSeries = function(name, id) {
     // check for already present
@@ -101,10 +124,31 @@ Franchise.prototype.remakeBlendedEpisodeList = function () {
     }
 };
 
-function Series(_name, _id) {
-    this.name = _name;
-    this.id = _id;
-    this.episodes = [];
+/**
+ * Series constructor
+ * @param {(string|object)} _arg name of series or raw series object
+ * @param {number} [_id] ID number of series, given by API
+ * @constructor
+ */
+function Series(_arg, _id) {
+    if (typeof _arg == "string") {
+        this.name = _arg;
+        this.id = _id;
+        this.episodes = [];
+    }
+    else {  // raw object
+        this.name = _arg.name;
+        this.id = _arg.id;
+        this.episodes = [];
+
+        var unsortedEpisodeList = [];
+
+        angular.forEach(_arg.episodes, function(episode) {
+            unsortedEpisodeList.push(new Episode(episode));
+        });
+
+        this.sortAndSetEpisodes(unsortedEpisodeList);
+    }
 }
 Series.prototype.sortAndSetEpisodes = function (unsortedEpisodeList) {
     console.log("called set and sort function - length " + unsortedEpisodeList.length);
@@ -147,15 +191,27 @@ Series.prototype.sortAndSetEpisodes = function (unsortedEpisodeList) {
  * @constructor
  */
 function Episode(_name, _airDate, _seasonNumber, _episodeNumber, _overview, _imgPath) {
-    // console.log("constructing episode " + _name + " with date " + _airDate);
-    this.name = _name;
-    this.airDate = _airDate;
-    this.seasonNumber = _seasonNumber;
-    this.episodeNumber = _episodeNumber;
-    this.overview = _overview;
-    this.imgPath = _imgPath;
-    this.seriesAbbreviation = "";  // this is only set when blending
-    this.watched = false;
+    if (typeof _name == "string") {
+        // console.log("constructing episode " + _name + " with date " + _airDate);
+        this.name = _name;
+        this.airDate = _airDate;
+        this.seasonNumber = _seasonNumber;
+        this.episodeNumber = _episodeNumber;
+        this.overview = _overview;
+        this.imgPath = _imgPath;
+        this.seriesAbbreviation = "";  // this is only set when blending
+        this.watched = false;
+    }
+    else {  // raw episode object
+        this.name = _name.name;
+        this.airDate = new Date(_name.airDate);
+        this.seasonNumber = _name.seasonNumber;
+        this.episodeNumber = _name.episodeNumber;
+        this.overview = _name.overview;
+        this.imgPath = _name.imgPath;
+        this.seriesAbbreviation = "";  // this is only set when blending
+        this.watched = _name.watched;
+    }
 }
 Episode.MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 Episode.prototype.getSeasonEpisodeString = function() {
@@ -485,6 +541,17 @@ angular.module("FlickBlenderApp", [])
         // TODO: implement load
         console.log("load not implemented - loading blank data");
         data.franchises.length = 0;
+        $http.post(LOAD_URL, {
+            id: "google" + auth.googleProfile.getId()  // if other auth methods are implemented, put a different code before id
+        }).then(function(response) {
+            console.log("load response:");
+            console.log(response);
+
+            angular.forEach(response.data.franchises, function(franchise) {
+                data.franchises.push(new Franchise(franchise));
+            });
+            // notify controller that it's loaded? apparently not needed
+        });
     };
 
     auth.signInNotify(function() {

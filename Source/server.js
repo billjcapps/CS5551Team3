@@ -59,6 +59,30 @@ expressApplication.post(SAVE_URL, function (req, res) {
     });
 });
 
+/**
+ *  load data from database
+ *  post object with "id" attribute
+ */
+expressApplication.post(LOAD_URL, function (req, res) {
+    console.log("received load request from client:");
+    console.log(req.body);
+    var id = req.body.id;
+
+    if (id == undefined) {
+        res.status(StatusEnum.BAD_REQUEST);
+        res.write("id required");
+        res.end();
+        return;
+    }
+
+    console.log("load id: " + id);
+    databaseInterface.load(id, function(response) {
+        res.contentType('application/json');
+        res.write(JSON.stringify(response));
+        res.end();
+    });
+});
+
 // static files served
 expressApplication.use(express.static("public"));
 

@@ -34,30 +34,32 @@ exports.newPost = function(post, callback) {
         })
     });
 };
+*/
 
 // callback takes the post as a parameter
-exports.getPost = function (id, callback) {
+exports.load = function (id, callback) {
     MongoClient.connect(DATABASE_URL, function(err, db) {
         if (err) {
             console.log("error connecting to database:");
             console.log(err);
-            callback({});
+            callback({ franchises: [] });
         }
 
-        db.collection(COLLECTION).findOne({ "_id": ObjectID(id) }, function(err, document) {
+        db.collection(COLLECTION).findOne({ "id": id }, function(err, document) {
             if (err) {
                 console.log("error in findOne:");
                 console.log(err);
-                callback({});
+                callback({ franchises: [] });
             }
 
             console.log("getPost got this post from database:");
             console.log(document);
-            callback(document);
+            callback(document.data);
         });
     });
 };
 
+/*
 // callback has boolean parameter for success
 exports.replyToPost = function(id, reply, callback) {
     exports.getPost(id, function(postToReplyTo) {
