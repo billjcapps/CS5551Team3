@@ -2,8 +2,8 @@
  * node-js server
  */
 
-var PORT = 63342;  // webstorm default is 63342, this is registered for google oauth
-                   // start server from command line before starting webstorm
+var PORT = 8080;  // webstorm default is 63342, this is registered for Bill's google oauth
+                  // start server from command line before starting webstorm
 
 var SAVE_URL = "/save";
 var LOAD_URL = "/load";
