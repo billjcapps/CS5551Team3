@@ -573,7 +573,6 @@ angular.module("FlickBlenderApp", [])
     };
 
     data.load = function() {
-        // TODO: implement load
         console.log("load not implemented - loading blank data");
         data.franchises.length = 0;
         $http.post(LOAD_URL, {
