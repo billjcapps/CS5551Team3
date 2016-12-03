@@ -658,6 +658,7 @@ angular.module("FlickBlenderApp", [])
 
     $scope.toggleWatchedClick = function(index) {
         $scope.currentEpisodeList[index].watched = ! $scope.currentEpisodeList[index].watched;
+        userData.save();
     };
 })
 
