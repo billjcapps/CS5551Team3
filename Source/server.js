@@ -25,8 +25,8 @@ var databaseInterface = require("./dbInterface.js");
 var expressApplication = express();
 
 expressApplication.use(cors());
-expressApplication.use(bodyParser.json());
-expressApplication.use(bodyParser.urlencoded({ extended: true }));
+expressApplication.use(bodyParser.json({limit: '50mb'}));
+expressApplication.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 /**
  *  save data to database
