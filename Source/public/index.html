@@ -267,8 +267,25 @@
         </div>
         <div class="col-sm-4 col-md-4">
             <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Episode Details</h3>
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left">Episode Details</h3>
+                    <div class="pull-right">
+                        <a href="#"
+                           ng-click="toggleFocusWatchedClick()">
+                            <span class="glyphicon glyphicon-check"
+                                  ng-hide="! focusEpisode.watched"
+                                  aria-hidden="true"
+                                  style="color:white"
+                                  data-toggle="tooltip"
+                                  title="Un-mark this episode as watched"></span>
+                            <span class="glyphicon glyphicon-eye-close"
+                                  ng-hide="focusEpisode.watched"
+                                  aria-hidden="true"
+                                  style="color:white"
+                                  data-toggle="tooltip"
+                                  title="Mark this episode as watched"></span>
+                        </a>
+                    </div>
                 </div>
                 <div class="panel-body">
                     <div class="thumbnail">

@@ -668,6 +668,10 @@ angular.module("FlickBlenderApp", [])
     $scope.toggleHideWatchedClick = function() {
         $scope.hideWatched = ! $scope.hideWatched;
     };
+
+    $scope.toggleFocusWatchedClick = function() {
+        $scope.focusEpisode.watched = ! $scope.focusEpisode.watched;
+    };
 })
 
 .controller('searchCtrl', function($scope, $http, $timeout, userData, workingFranchise) {
