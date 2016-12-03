@@ -610,6 +610,8 @@ angular.module("FlickBlenderApp", [])
     $scope.lastFranchiseClicked = -1;  // second click toggles hiding of serieses
     $scope.thisFranchiseHidden = userData.franchises.map(function() {return true;});  // a true for each franchise
 
+    $scope.hideWatched = false;
+
     $scope.focusEpisode = new Episode({});
 
     $scope.franchiseListClick = function(franchiseIndexClicked) {
@@ -658,6 +660,10 @@ angular.module("FlickBlenderApp", [])
     $scope.toggleWatchedClick = function(index) {
         $scope.currentEpisodeList[index].watched = ! $scope.currentEpisodeList[index].watched;
         userData.save();
+    };
+
+    $scope.toggleHideWatchedClick = function() {
+        $scope.hideWatched = ! $scope.hideWatched;
     };
 })
 

@@ -211,13 +211,27 @@
         </div>
         <div class="col-sm-4 col-md-4">
             <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Episodes</h3>
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left">Episodes</h3>
+                    <a href="#"
+                       class="pull-right"
+                       ng-click="toggleHideWatchedClick()">
+                        <span class="glyphicon glyphicon-eye-open"
+                              ng-hide="! hideWatched"
+                              aria-hidden="true"
+                              style="color:white"></span>
+                        <span class="glyphicon glyphicon-eye-close"
+                              ng-hide="hideWatched"
+                              aria-hidden="true"
+                              style="color:white"></span>
+                        <!-- TODO: add tooltip to these -->
+                    </a>
                     <!-- TODO: option to only show unwatched episodes -->
                 </div>
                 <div class="list-group">
                     <div class="list-group-item btn-group listItemWithButtons clearfix"
-                         ng-repeat="episode in currentEpisodeList track by $index">
+                         ng-repeat="episode in currentEpisodeList track by $index"
+                         ng-hide="hideWatched && episode.watched">
                         <button class="btn btn-default nameWithOneButton"
                                 ng-click="episodeListClick($index)">
                             <span ng-hide="listIsNotBlended">{{episode.seriesAbbreviation}}</span>
