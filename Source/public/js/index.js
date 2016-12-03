@@ -477,13 +477,13 @@ angular.module("FlickBlenderApp", [])
             id: "google" + auth.googleProfile.getId(),  // if other auth methods are implemented, put a different code before id
             data: { franchises: data.franchises }
         }).then(function(response) {
-            alert("response for data save: " + response);
+            console.log("response for data save: " + response);
         });
     };
 
     data.load = function() {
         // TODO: implement load
-        alert("load not implemented - loading blank data");
+        console.log("load not implemented - loading blank data");
         data.franchises.length = 0;
     };
 
@@ -590,6 +590,8 @@ angular.module("FlickBlenderApp", [])
         // TODO: tell the user that this is how you update the episode list
         // (click on the series in the search results)
         // (or make a different way of updating it)
+
+        // TODO: fix bug: update overwrites watched status
     };
 })
 

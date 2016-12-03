@@ -88,8 +88,7 @@ exports.save = function (id, dataToSave, callback) {
 
         console.log("ready to call upsert");
 
-        /*
-        db.collection(COLLECTION).upsert({_id: id}, post, function (err) {
+        db.collection(COLLECTION).updateOne({id: id}, {id:id, data:dataToSave}, {upsert:true, w: 1}, function (err) {
             if (err) {
                 console.log("error updating post:");
                 console.log(err);
@@ -97,11 +96,9 @@ exports.save = function (id, dataToSave, callback) {
                 return;
             }
 
-            console.log("successful post update");
+            console.log("successful data update");
             callback(true);
-        })
-        */
-        callback(false);
+        });
     });
 };
 

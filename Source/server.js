@@ -45,10 +45,16 @@ expressApplication.post(SAVE_URL, function (req, res) {
     }
 
     console.log("save id: " + id);
-    console.log("save data:\n");
+    console.log("save data:");
     console.log(dataToSave);
-    databaseInterface.save(id, dataToSave, function(result) {
-        res.write(JSON.stringify(result));
+    databaseInterface.save(id, dataToSave, function(success) {
+        if (success) {
+            res.write("success");
+            res.end();
+            return;
+        }
+        res.status(StatusEnum.SERVER_ERROR);
+        res.write("error saving data");
         res.end();
     });
 });
